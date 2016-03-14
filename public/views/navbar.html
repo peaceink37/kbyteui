@@ -1,0 +1,48 @@
+<div ng-controller='NavController as nav'>
+    <div id="navbar">
+        <nav class="navbar" role="navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <a ui-sref="home">
+                            <img class="logo" src="../images/kbytelogo-tight.png"></img>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <nav class="hidden-sm hidden-xs">
+                            <ul class="nav navbar-nav">
+                                <li><a ui-sref="comms">Comms</a></li>
+                                <li><span>|</span></li>
+                                <li><a ui-sref="formz">Formz</a></li>
+                                <li><span>|</span></li>
+                                <li><a ui-sref="kmaps">Maps</a></li>
+                                <li><span>|</span></li>
+                                <li><a ui-sref="kmapquery">Map Query</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-sm-2 hidden-xs">
+                        <div class="user-signin">
+                            <button id="signin" class="btn btn-primary">Log In / Sign Up</button>
+                        </div>
+                        <div class="pad-buffer">
+                            <span>{{nav.winLocation}}</span>
+                        </div>
+                    </div>
+                    <div class="hidden-lg hidden-md">
+                        <i class="fa fa-bars"></i>
+                    </div>
+                    <nav id="topnav-mobile" class="collapse hidden-lg hidden-md">
+                        <ul class="dropdown-menu" role="menu" style="display:block !important;">
+                            <li><a ui-sref="home">Home</a></li>
+                            <li><span>|</span></li>
+                            <li><a ui-sref="comms">Comms</a></li>
+                            <li><span>|</span></li>
+                            <li><a ui-sref="formz">Formz</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>

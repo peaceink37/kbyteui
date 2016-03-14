@@ -1,0 +1,64 @@
+<div ng-controller='CommController as comms'>
+    <div class="container">
+        <div class="row">
+            <form>
+                <section class='col-md-6 col-xs-12'>
+                    <div ng-controller='SocketController as socketc'>
+                        You are known as: <span ng-bind="nickName"></span>.
+                        <br/>
+                        Change your nickname with <code>/namechange [yourNewName]</code>
+                        <div class='row'>
+                            <div class='col-md-9'>
+                                <textarea style='width: 100%; height: 200px' ng-disable='true' ng-model='socketc.infoData.messageLog'></textarea>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            &nbsp;
+                        </div>
+                        <div class='row'>
+                            <button class='btn btn-sm btn-primary' ng-click="socketc.createRoom(socketc.infoData.createActive)">Add Room</button>
+                            <input ng-if="socketc.infoData.createActive" type="text" ng-max="100" ng-model="socketc.infoData.roomName">
+                            <button class='btn btn-sm btn-primary' ng-click="socketc.joinRoom(socketc.infoData.joinActive)">Join</button>
+                            <input ng-if="socketc.infoData.joinActive" type="text" ng-max="100" ng-model="socketc.infoData.roomName">
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-8'>
+                                <form role='form' novalidate name='form'>
+                                    <div class='form-group'>
+                                        <input type='text' style='width: 80%'
+                                               required
+                                               ng-max='100'
+                                               ng-model='socketc.infoData.message'
+                                               focus>
+                                        <button class='btn btn-sm btn-primary'
+                                                ng-enable='form.$valid'
+                                                ng-click="socketc.sendMessage(socketc.infoData.message)">Send!</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <h3>Socket Visuals - Ready for the purge</h3>
+                        <div class="content-entry" contenteditable="true" ng-maxlength="1000">
+
+                        </div>
+                        <h3>{{socketc.infoData.messageLog}}</h3>
+                    </div>
+                </section>
+            </form>
+
+            <section class="col-xs-12 col-md-6">
+                <h3>{{comms.stringOut}}</h3>
+                <h5>{{comms.commApiResult}}</h5>
+            </section>
+            <section class="col-xs-12 col-md-6">
+                <video controls="true">
+                    <source src="../images/aquateen213.webm" type="video/webm">
+                    <source src="../images/aquateen213.mp4" type="video/mp4">
+                    Sorry, your browser doesn't support HTML5 video.
+                    You are a relic, and should either crawl underneath a condemned museum
+                    or march yourself into the sea.
+                </video>
+            </section>
+        </div>
+    </div>
+</div>

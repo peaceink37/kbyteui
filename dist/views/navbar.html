@@ -1,0 +1,27 @@
+<div ng-controller='NavCtrl as nav'>
+    <div id="navbar">
+        <nav class="navbar" role="navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <h2>{{nav.navGreeting}}</h2>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <ul class="nav navbar-nav">
+                            <li><a ui-sref="home">Home</a></li>
+                            <li><span>|</span></li>
+                            <li><a ui-sref="comms">Comms</a></li>
+                            <li><span>|</span></li>
+                            <li><a ui-sref="formz">Formz</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span>{{nav.winLocation}}</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
