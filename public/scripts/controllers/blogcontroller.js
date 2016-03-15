@@ -33,7 +33,7 @@ function BlogController($state, $q, $sce, ContentApis) {
 		UserInfo.setEntry(this.formInfo)
 			.success(function (data) {
 				if (data.Result === true) {
-					entryMessage = "Well, the damned thing worked.";
+					entryMessage = "Well, this thing worked.";
 					_this.retreiveUserEntries();
 				} else {
 					entryMessage = "Something bad happened on the validation side";

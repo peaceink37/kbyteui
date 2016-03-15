@@ -5,7 +5,7 @@
  */
 
 /* @ngInject */
-function NavCtrl($rootScope, $state) {
+function NavController($rootScope, $state) {
 
 	var _this = this;
 	this.navGreeting = 'KByteDesign';
@@ -24,26 +24,23 @@ function NavCtrl($rootScope, $state) {
 		}
 		console.log(" signin modal function called ");
 		var tObj = {};
-		tObj.dork0 = "a dork";
-		tObj.dork1 = "a small dork";
-		tObj.dork2 = "a median dork";
-		tObj.dork3 = "a large dork";
-		tObj.dork4 = "a ginormous dork";
+		tObj.signinName = "";
+		tObj.pass = "";
 
 		for (var x in tObj) {
 			console.log(" print the value sir " + tObj[x])
 		}
 
-		tObj.dork5 = function (val) {
+		tObj.funval = function (val) {
 			console.log(" are we not men? " + val);
 		};
 
-		tObj.dork5(" no sir, we are devo");
+		tObj.funval(" no sir, we are devo");
 	};
 
 };
 
 angular.module('kbyteApp')
-	.controller('NavCtrl', NavCtrl);
+	.controller('NavController', NavController);
 
-module.exports = NavCtrl;
+module.exports = NavController;

@@ -7,10 +7,6 @@ require('./controllers/blogcontroller');
 require('./controllers/socketcontroller');
 require('./controllers/mapcontroller');
 
-
-//require('KMapsCtrl');
-//require('MapQueryCtrl');
-
 require('./services/userapiservice');
 require('./services/mapservice');
 require('./services/socketservice');
@@ -50,7 +46,7 @@ function BlogController($state, $q, $sce, ContentApis) {
 		UserInfo.setEntry(this.formInfo)
 			.success(function (data) {
 				if (data.Result === true) {
-					entryMessage = "Well, the damned thing worked.";
+					entryMessage = "Well, this thing worked.";
 					_this.retreiveUserEntries();
 				} else {
 					entryMessage = "Something bad happened on the validation side";
@@ -394,7 +390,7 @@ module.exports = MapQueryController;
  */
 
 /* @ngInject */
-function NavCtrl($rootScope, $state) {
+function NavController($rootScope, $state) {
 
 	var _this = this;
 	this.navGreeting = 'KByteDesign';
@@ -413,30 +409,27 @@ function NavCtrl($rootScope, $state) {
 		}
 		console.log(" signin modal function called ");
 		var tObj = {};
-		tObj.dork0 = "a dork";
-		tObj.dork1 = "a small dork";
-		tObj.dork2 = "a median dork";
-		tObj.dork3 = "a large dork";
-		tObj.dork4 = "a ginormous dork";
+		tObj.signinName = "";
+		tObj.pass = "";
 
 		for (var x in tObj) {
 			console.log(" print the value sir " + tObj[x])
 		}
 
-		tObj.dork5 = function (val) {
+		tObj.funval = function (val) {
 			console.log(" are we not men? " + val);
 		};
 
-		tObj.dork5(" no sir, we are devo");
+		tObj.funval(" no sir, we are devo");
 	};
 
 }
-NavCtrl.$inject = ["$rootScope", "$state"];;
+NavController.$inject = ["$rootScope", "$state"];;
 
 angular.module('kbyteApp')
-	.controller('NavCtrl', NavCtrl);
+	.controller('NavController', NavController);
 
-module.exports = NavCtrl;
+module.exports = NavController;
 },{}],7:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/9/16.
@@ -800,7 +793,7 @@ function ContentApis ($q, $http){
 
 	apiService.getEntry = function(){
 
-		var entryVar = " booty call of duty ";
+		var entryVar = " Entry message ";
 
 		return entryVar;
 	};

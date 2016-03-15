@@ -21,7 +21,7 @@ function ContentApis ($q, $http){
 
 	apiService.getEntry = function(){
 
-		var entryVar = " booty call of duty ";
+		var entryVar = " Entry message ";
 
 		return entryVar;
 	};
