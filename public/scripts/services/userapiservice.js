@@ -1,4 +1,8 @@
-
+/**
+ * Created by kellysmith on 2/11/16.
+ *
+ * 2016 pokingBears.com
+ */
 'use strict';
 
 /* @ngInject */

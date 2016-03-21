@@ -12,8 +12,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 	_this.infoData = {};
 	_this.messages = []
 	_this.infoData.message = '';
-	console.log(" init the socket controller ");
-	_this.infoData.nickName = nickName;
+	_this.infoData.nickName = 'Kelly';
 	_this.infoData.roomName = 'TheLounge'
 	_this.infoData.messageLog = 'Ready to chat!';
 	_this.infoData.joinActive = false;

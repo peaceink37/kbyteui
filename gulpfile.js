@@ -67,25 +67,25 @@ gulp.task('icons', function(){
 });
 
 
-gulp.task('styles', ['cleanStyles'], function() { 
-	var myRev = {};
+gulp.task('styles', ['cleanStyles'], function(){
 
 	return gulp.src(config.sassPath + '/main.scss')
-	    .pipe(sass({
-		    style: 'compressed',
-		    loadPath: [
-			    './sass',
-			    config.bowerDir + '/bootstrap-sass-official/assets/stylesheets',
-			    config.bowerDir + '/bootstrap-sass-official/assets/fonts',
-			    config.bowerDir + '/fontawesome/scss',
-		    ]
-	    }) 
-        .on("error", notify.onError(function (error) {
+		.pipe(sass({
+			style: 'compressed',
+			loadPath: [
+				'./sass',
+				config.bowerDir + '/bootstrap-sass-official/assets/stylesheets',
+				config.bowerDir + '/bootstrap-sass-official/assets/fonts',
+				config.bowerDir + '/fontawesome/scss'
+			]
+		}))
+		.on("error", notify.onError(function (error) {
 			return "Error: " + error.message;
-		})))
+		}))
 		.pipe(rev())
+		.pipe(gulp.dest('./dist/styles'))
 		.pipe(gulp.dest('./public/styles'))
-		.pipe(gulp.dest('./dist/styles')); 
+
 });
 
 
@@ -159,7 +159,6 @@ gulp.task('styleversion',['styles'], function(){
 						.pipe(gulp.dest('./public'));
 
 				}
-
 
 			}
 

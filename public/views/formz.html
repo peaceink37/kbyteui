@@ -2,6 +2,7 @@
     <div class="container">
         <div class="row">
             <section class="col-xs-12 col-md-6">
+
                 <form class="form-horizontal" name="userEntryForm" ng-submit="formz.submitUserEntry(userEntryForm.$valid)">
                     <div>
                         <label class="col-xs-12">Enter Your User Id</label>
@@ -15,15 +16,16 @@
                         <div class="form-group">
                             <label>{{formz.formInfo.userName}}</label>
                         </div>
-
-                        <div class="form-group">
-                            <div class="content-entry text-background" contenteditable="true" ng-maxlength="1000">
-
+                        <div ng-controller='HtmlEditController as htmledit'>
+                            <div>
+                                <editor-element></editor-element>
                             </div>
+
+                            <editor-canvas></editor-canvas>
                         </div>
                     </div>
                     <div class="user-submit">
-                        <button type="submit" class="btn btn-primary">Post Entry</button>
+                        <button type="submit" ng-click="formz.submit = true" class="btn btn-primary">Post Entry</button>
                     </div>
 
                 </form>

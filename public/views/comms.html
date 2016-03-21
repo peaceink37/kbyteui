@@ -2,14 +2,16 @@
     <div class="container">
         <div class="row">
             <form>
-                <section class='col-md-6 col-xs-12'>
+                <section class='col-md-6 col-xs-12' style="margin-top:2px;">
+
                     <div ng-controller='SocketController as socketc'>
-                        You are known as: <span ng-bind="nickName"></span>.
+                        <h3>Socket Visuals - {{socketc.infoData.messageLog}}</h3>
+                        You are known as: <span ng-bind="socketc.infoData.nickName"></span>.
                         <br/>
                         Change your nickname with <code>/namechange [yourNewName]</code>
-                        <div class='row'>
-                            <div class='col-md-9'>
-                                <textarea style='width: 100%; height: 200px' ng-disable='true' ng-model='socketc.infoData.messageLog'></textarea>
+                        <div class='row' style="margin-top:10px;">
+                            <div>
+                                <textarea class="text-background" style='width: 100%; height: 200px' ng-disable='true' ng-model='socketc.infoData.messageLog'></textarea>
                             </div>
                         </div>
                         <div class='row'>
@@ -22,10 +24,10 @@
                             <input ng-if="socketc.infoData.joinActive" type="text" ng-max="100" ng-model="socketc.infoData.roomName">
                         </div>
                         <div class='row'>
-                            <div class='col-md-8'>
+                            <div>
                                 <form role='form' novalidate name='form'>
-                                    <div class='form-group'>
-                                        <input type='text' style='width: 80%'
+                                    <div class='form-group' style="margin-top:10px;">
+                                        <input type='text' style='width: 80%; padding:6px; margin-top:2px;'
                                                required
                                                ng-max='100'
                                                ng-model='socketc.infoData.message'
@@ -37,11 +39,9 @@
                                 </form>
                             </div>
                         </div>
-                        <h3>Socket Visuals - Ready for the purge</h3>
                         <div class="content-entry" contenteditable="true" ng-maxlength="1000">
 
                         </div>
-                        <h3>{{socketc.infoData.messageLog}}</h3>
                     </div>
                 </section>
             </form>

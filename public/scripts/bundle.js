@@ -6,11 +6,16 @@ require('./controllers/commcontroller');
 require('./controllers/blogcontroller');
 require('./controllers/socketcontroller');
 require('./controllers/mapcontroller');
+require('./controllers/htmleditcontroller');
 
+require('./directives/editorelement');
+
+require('./services/editorservice');
+require('./services/eventfactory');
 require('./services/userapiservice');
 require('./services/mapservice');
 require('./services/socketservice');
-},{"./controllers/blogcontroller":2,"./controllers/commcontroller":3,"./controllers/homecontroller":4,"./controllers/mapcontroller":5,"./controllers/navcontroller":6,"./controllers/socketcontroller":7,"./main":8,"./services/mapservice":9,"./services/socketservice":10,"./services/userapiservice":11}],2:[function(require,module,exports){
+},{"./controllers/blogcontroller":2,"./controllers/commcontroller":3,"./controllers/homecontroller":4,"./controllers/htmleditcontroller":5,"./controllers/mapcontroller":6,"./controllers/navcontroller":7,"./controllers/socketcontroller":8,"./directives/editorelement":9,"./main":10,"./services/editorservice":11,"./services/eventfactory":12,"./services/mapservice":13,"./services/socketservice":14,"./services/userapiservice":15}],2:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/9/16.
  *
@@ -23,7 +28,8 @@ function BlogController($state, $q, $sce, ContentApis) {
 	var UserInfo = ContentApis;
 	var _this = this;
 
-	_this.setEntryMessage = "We'll see how it goes."
+	_this.submit = false;
+    _this.setEntryMessage = "We'll see how it goes."
 	_this.formInfo = {};
 	_this.userIdChange = "";
 	_this.formInfo.title = " da book of mack ";
@@ -35,13 +41,17 @@ function BlogController($state, $q, $sce, ContentApis) {
 
 	_this.submitUserEntry = function () {
 
+		if(_this.submit === false){
+			return;
+		} else {
+			_this.submit = false;
+		}
+
 		_this.formInfo.userId = _this.userIdChange;
+
 		var entryMessage = "";
-		//var deferred = $q.
 
 		_this.formInfo.comments = $(".content-entry").html();
-
-		console.log(" userId " + _this.formInfo.comments + "  " + _this.formInfo.userName)
 
 		UserInfo.setEntry(this.formInfo)
 			.success(function (data) {
@@ -77,7 +87,13 @@ function BlogController($state, $q, $sce, ContentApis) {
 					console.log(" retrieve com  " + data[k].uid + "  " + v);
 					var userAndComment = {};
 					userAndComment.user = data[k].uid;
-					var textToHtml = data[k].comments.replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
+					var textToHtml;
+
+					try{ textToHtml = data[k].comments.replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");}
+					catch(err){
+						textToHtml = err.message;
+					}
+
 					userAndComment.comment = textToHtml;
 					console.log(" textToHTML var " + textToHtml);
 					_this.formInfo.userComments.push(userAndComment);
@@ -121,10 +137,14 @@ function CommController($rootScope, $state, ContentApis) {
 
 	_this.commApiResult = commApis.getEntry();
 
+	if(_this.commApiResult.indexOf('message') != -1){
+		_this.commApiResult = 'The Aqua Teens Love You';
+	}
+
 	function getStringOut() {
 
-		var theString = "This be a comm string";
-		_this.stringOut = theString.substr(5, 10);
+		var theString = "We selected this video especially for you";
+		_this.stringOut = theString.substr(0, theString.length);
 	};
 
 	getStringOut();
@@ -211,6 +231,46 @@ angular.module('kbyteApp')
 
 module.exports = HomeController;
 },{}],5:[function(require,module,exports){
+/**
+ * Created by kellysmith on 3/18/16.
+ *
+ * 2016 pokingBears.com
+ */
+
+'use strict';
+
+/* @ngInject */
+function HtmlEditController (EventFactory, EditorService){
+
+	var _this = this;
+	var currentElement;
+
+	_this.htmlelements = [
+        "h1",
+		"h4",
+		"p"
+	];
+
+	_this.getElement = function(){
+		return currentElement;
+	}
+
+	_this.setElement = function(elementValue){
+		console.log(" element value "+elementValue);
+
+		EventFactory.broadcast('elementset', elementValue);
+	};
+
+}
+HtmlEditController.$inject = ["EventFactory", "EditorService"];
+
+angular.module('kbyteApp')
+	.controller('HtmlEditController', HtmlEditController);
+
+
+module.exports = HtmlEditController;
+
+},{}],6:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/9/16.
  *
@@ -382,7 +442,7 @@ angular.module('kbyteApp')
 
 module.exports = MapController;
 module.exports = MapQueryController;
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/9/16.
  *
@@ -430,7 +490,7 @@ angular.module('kbyteApp')
 	.controller('NavController', NavController);
 
 module.exports = NavController;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/9/16.
  *
@@ -445,8 +505,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 	_this.infoData = {};
 	_this.messages = []
 	_this.infoData.message = '';
-	console.log(" init the socket controller ");
-	_this.infoData.nickName = nickName;
+	_this.infoData.nickName = 'Kelly';
 	_this.infoData.roomName = 'TheLounge'
 	_this.infoData.messageLog = 'Ready to chat!';
 	_this.infoData.joinActive = false;
@@ -511,7 +570,81 @@ angular.module('kbyteApp')
 	});
 
 module.exports = SocketController;
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+/**
+ * Created by kellysmith on 3/17/16.
+ *
+ * 2014 pokingBears.com
+ */
+
+function editorElement(){
+
+	return {
+
+		restrict:"E",
+		replace: true,
+		scope:{},
+		controller:'HtmlEditController',
+		controllerAs:'htmledit',
+		bindToController:{
+			htmlelements:'='
+		},
+		template:'<button class="btn btn-default" ng-repeat="htmlelement in htmledit.htmlelements" ng-click="htmledit.setElement(htmlelement)">{{htmlelement}}</button>'
+
+	};
+
+	console.log(" ping the directive ");
+
+}
+
+function editorCanvas(EventFactory){
+
+	var canvasElement;
+
+	function link(element, attrs, ctrl){
+
+		canvasElement = element;
+
+		EventFactory.subscribe('elementset',function(e, newEl){
+			for(poopy in e) {
+				console.log(" big ups to event factories " + poopy+ "   "+newEl);
+			}
+			doStuff(newEl);
+		})
+	}
+
+	function doStuff(newEl){
+
+		var newElement = angular.element("<"+newEl+"></"+newEl+">");
+		console.log(" now we be talking "+newElement);
+		$('.content-entry').append(newElement);
+	}
+
+	return {
+
+		restrict:"E",
+		replace: true,
+		scope:{},
+		controller:'HtmlEditController',
+		controllerAs:'htmledit',
+		bindToController: {
+			htmlelements: '='
+		},
+		template:'<div class="form-group"><div class="content-entry text-background" contenteditable="true" ng-maxlength="1000"></div></div>',
+		link:link
+	};
+
+}
+editorCanvas.$inject = ["EventFactory"];
+
+angular.module('kbyteApp')
+	.directive("editorElement", editorElement)
+	.directive("editorCanvas", editorCanvas);
+
+
+module.exports = editorElement;
+module.exports = editorCanvas;
+},{}],10:[function(require,module,exports){
 // chaining instead or var; give app name then app dependencies inside array brackets
 
 
@@ -561,7 +694,57 @@ module.exports = angularInit;
 
 
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
+/**
+ * Created by kellysmith on 3/18/16.
+ *
+ * 2016 pokingBears.com
+ */
+
+'use strict'
+
+function EditorService ($rootScope){
+
+	this.broadcastElementChange = function(val){
+
+	}
+
+}
+EditorService.$inject = ["$rootScope"];
+
+angular.module('kbyteApp')
+	.service('EditorService', EditorService);
+},{}],12:[function(require,module,exports){
+/**
+ * Created by kellysmith on 3/20/16.
+ *
+ * 2016 pokingBears.com
+ */
+
+
+function EventFactory($rootScope) {
+
+	var subscribe = function (eventName, callback) {
+		return $rootScope.$on(eventName, callback);
+	};
+
+	var broadcast = function (eventName, data) {
+		$rootScope.$emit(eventName, data);
+	};
+
+	return {
+		subscribe: subscribe,
+		broadcast: broadcast
+	};
+}
+EventFactory.$inject = ["$rootScope"];;
+
+angular.module('kbyteApp').factory('EventFactory', EventFactory);
+
+module.exports = EventFactory;
+
+
+},{}],13:[function(require,module,exports){
 'use strict';
 
 /* @ngInject */
@@ -750,7 +933,7 @@ angular.module('kbyteApp')
 	.factory('MapService', MapService);
 
 module.exports = MapService;
-},{}],10:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * Created by kellysmith on 2/22/16.
  *
@@ -769,8 +952,12 @@ angular.module('kbyteApp')
 	.factory('ChatSocket', ChatSocket);
 
 module.exports = ChatSocket;
-},{}],11:[function(require,module,exports){
-
+},{}],15:[function(require,module,exports){
+/**
+ * Created by kellysmith on 2/11/16.
+ *
+ * 2016 pokingBears.com
+ */
 'use strict';
 
 /* @ngInject */

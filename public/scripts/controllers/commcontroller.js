@@ -16,10 +16,14 @@ function CommController($rootScope, $state, ContentApis) {
 
 	_this.commApiResult = commApis.getEntry();
 
+	if(_this.commApiResult.indexOf('message') != -1){
+		_this.commApiResult = 'The Aqua Teens Love You';
+	}
+
 	function getStringOut() {
 
-		var theString = "This be a comm string";
-		_this.stringOut = theString.substr(5, 10);
+		var theString = "We selected this video especially for you";
+		_this.stringOut = theString.substr(0, theString.length);
 	};
 
 	getStringOut();

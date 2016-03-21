@@ -10,7 +10,8 @@ function BlogController($state, $q, $sce, ContentApis) {
 	var UserInfo = ContentApis;
 	var _this = this;
 
-	_this.setEntryMessage = "We'll see how it goes."
+	_this.submit = false;
+    _this.setEntryMessage = "We'll see how it goes."
 	_this.formInfo = {};
 	_this.userIdChange = "";
 	_this.formInfo.title = " da book of mack ";
@@ -22,13 +23,17 @@ function BlogController($state, $q, $sce, ContentApis) {
 
 	_this.submitUserEntry = function () {
 
+		if(_this.submit === false){
+			return;
+		} else {
+			_this.submit = false;
+		}
+
 		_this.formInfo.userId = _this.userIdChange;
+
 		var entryMessage = "";
-		//var deferred = $q.
 
 		_this.formInfo.comments = $(".content-entry").html();
-
-		console.log(" userId " + _this.formInfo.comments + "  " + _this.formInfo.userName)
 
 		UserInfo.setEntry(this.formInfo)
 			.success(function (data) {
@@ -64,7 +69,13 @@ function BlogController($state, $q, $sce, ContentApis) {
 					console.log(" retrieve com  " + data[k].uid + "  " + v);
 					var userAndComment = {};
 					userAndComment.user = data[k].uid;
-					var textToHtml = data[k].comments.replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
+					var textToHtml;
+
+					try{ textToHtml = data[k].comments.replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");}
+					catch(err){
+						textToHtml = err.message;
+					}
+
 					userAndComment.comment = textToHtml;
 					console.log(" textToHTML var " + textToHtml);
 					_this.formInfo.userComments.push(userAndComment);
