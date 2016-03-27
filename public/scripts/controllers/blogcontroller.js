@@ -19,6 +19,7 @@ function BlogController($state, $q, $sce, ContentApis) {
 	_this.formInfo.bodyBooty = " blah blah doop ";
 	_this.formInfo.hidden = false;
 	_this.formInfo.userComments = [];
+	_this.formInfo.userName = "Kelly";
 
 
 	_this.submitUserEntry = function () {
@@ -29,13 +30,15 @@ function BlogController($state, $q, $sce, ContentApis) {
 			_this.submit = false;
 		}
 
-		_this.formInfo.userId = _this.userIdChange;
+		_this.formInfo.userId = "1234";
+		//_this.userIdChange;
 
 		var entryMessage = "";
 
 		_this.formInfo.comments = $(".content-entry").html();
 
-		UserInfo.setEntry(this.formInfo)
+		UserInfo.setEntry(_this.formInfo)
+
 			.success(function (data) {
 				if (data.Result === true) {
 					entryMessage = "Well, this thing worked.";
@@ -44,6 +47,7 @@ function BlogController($state, $q, $sce, ContentApis) {
 					entryMessage = "Something bad happened on the validation side";
 				}
 				setEntryMessage(entryMessage);
+				$(".content-entry").empty();
 			})
 			.error(function (data) {
 				console.error('could not retrieve user data', data);
@@ -64,9 +68,9 @@ function BlogController($state, $q, $sce, ContentApis) {
 
 	_this.retreiveUserEntries = function () {
 		UserInfo.retrieveEntries()
-			.success(function (data) {
+			.then(function (data) {
 				angular.forEach(data, function (v, k) {
-					console.log(" retrieve com  " + data[k].uid + "  " + v);
+					//console.log(" retrieve com  " + data[k].uid + "  " + data[k]+"  "+v);
 					var userAndComment = {};
 					userAndComment.user = data[k].uid;
 					var textToHtml;
@@ -77,15 +81,12 @@ function BlogController($state, $q, $sce, ContentApis) {
 					}
 
 					userAndComment.comment = textToHtml;
-					console.log(" textToHTML var " + textToHtml);
+					//console.log(" textToHTML var " + textToHtml);
 					_this.formInfo.userComments.push(userAndComment);
 
 				})
 				// put all the comments into an array and then join them up
 
-			})
-			.error(function (data) {
-				console.error(' this request has pooped the bed');
 			})
 
 	};

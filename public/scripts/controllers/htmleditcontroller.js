@@ -7,25 +7,20 @@
 'use strict';
 
 /* @ngInject */
-function HtmlEditController (EventFactory, EditorService){
+function HtmlEditController ($scope, EventFactory, EditorService){
 
 	var _this = this;
 	var currentElement;
 
-	_this.htmlelements = [
-        "h1",
-		"h4",
-		"p"
-	];
+	// TODO find out why this is having issues being bound
+	// to _this
+	$scope.htmlelements=["h1","h4","p"];
 
-	_this.getElement = function(){
-		return currentElement;
-	}
 
+	// The _this binding is working fine here
 	_this.setElement = function(elementValue){
 		console.log(" element value "+elementValue);
-
-		EventFactory.broadcast('elementset', elementValue);
+		EventFactory.emit('elementset', elementValue);
 	};
 
 }

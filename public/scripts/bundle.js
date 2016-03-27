@@ -6,16 +6,20 @@ require('./controllers/commcontroller');
 require('./controllers/blogcontroller');
 require('./controllers/socketcontroller');
 require('./controllers/mapcontroller');
-require('./controllers/htmleditcontroller');
-
 require('./directives/editorelement');
+require('./controllers/htmleditcontroller');
+require('./controllers/modalcontroller');
+require('./controllers/logincontroller');
+
 
 require('./services/editorservice');
 require('./services/eventfactory');
+require('./services/modalscopeservice');
 require('./services/userapiservice');
 require('./services/mapservice');
 require('./services/socketservice');
-},{"./controllers/blogcontroller":2,"./controllers/commcontroller":3,"./controllers/homecontroller":4,"./controllers/htmleditcontroller":5,"./controllers/mapcontroller":6,"./controllers/navcontroller":7,"./controllers/socketcontroller":8,"./directives/editorelement":9,"./main":10,"./services/editorservice":11,"./services/eventfactory":12,"./services/mapservice":13,"./services/socketservice":14,"./services/userapiservice":15}],2:[function(require,module,exports){
+
+},{"./controllers/blogcontroller":2,"./controllers/commcontroller":3,"./controllers/homecontroller":4,"./controllers/htmleditcontroller":5,"./controllers/logincontroller":6,"./controllers/mapcontroller":7,"./controllers/modalcontroller":8,"./controllers/navcontroller":9,"./controllers/socketcontroller":10,"./directives/editorelement":11,"./main":12,"./services/editorservice":13,"./services/eventfactory":14,"./services/mapservice":15,"./services/modalscopeservice":16,"./services/socketservice":17,"./services/userapiservice":18}],2:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/9/16.
  *
@@ -37,6 +41,7 @@ function BlogController($state, $q, $sce, ContentApis) {
 	_this.formInfo.bodyBooty = " blah blah doop ";
 	_this.formInfo.hidden = false;
 	_this.formInfo.userComments = [];
+	_this.formInfo.userName = "Kelly";
 
 
 	_this.submitUserEntry = function () {
@@ -47,13 +52,15 @@ function BlogController($state, $q, $sce, ContentApis) {
 			_this.submit = false;
 		}
 
-		_this.formInfo.userId = _this.userIdChange;
+		_this.formInfo.userId = "1234";
+		//_this.userIdChange;
 
 		var entryMessage = "";
 
 		_this.formInfo.comments = $(".content-entry").html();
 
-		UserInfo.setEntry(this.formInfo)
+		UserInfo.setEntry(_this.formInfo)
+
 			.success(function (data) {
 				if (data.Result === true) {
 					entryMessage = "Well, this thing worked.";
@@ -62,6 +69,7 @@ function BlogController($state, $q, $sce, ContentApis) {
 					entryMessage = "Something bad happened on the validation side";
 				}
 				setEntryMessage(entryMessage);
+				$(".content-entry").empty();
 			})
 			.error(function (data) {
 				console.error('could not retrieve user data', data);
@@ -82,9 +90,9 @@ function BlogController($state, $q, $sce, ContentApis) {
 
 	_this.retreiveUserEntries = function () {
 		UserInfo.retrieveEntries()
-			.success(function (data) {
+			.then(function (data) {
 				angular.forEach(data, function (v, k) {
-					console.log(" retrieve com  " + data[k].uid + "  " + v);
+					//console.log(" retrieve com  " + data[k].uid + "  " + data[k]+"  "+v);
 					var userAndComment = {};
 					userAndComment.user = data[k].uid;
 					var textToHtml;
@@ -95,22 +103,18 @@ function BlogController($state, $q, $sce, ContentApis) {
 					}
 
 					userAndComment.comment = textToHtml;
-					console.log(" textToHTML var " + textToHtml);
+					//console.log(" textToHTML var " + textToHtml);
 					_this.formInfo.userComments.push(userAndComment);
 
 				})
 				// put all the comments into an array and then join them up
 
 			})
-			.error(function (data) {
-				console.error(' this request has pooped the bed');
-			})
 
 	};
 
 	_this.retreiveUserEntries();
-}
-BlogController.$inject = ["$state", "$q", "$sce", "ContentApis"];;
+};
 
 angular.module('kbyteApp')
 	.controller('BlogController', BlogController);
@@ -137,7 +141,7 @@ function CommController($rootScope, $state, ContentApis) {
 
 	_this.commApiResult = commApis.getEntry();
 
-	if(_this.commApiResult.indexOf('message') != -1){
+	if(_this.commApiResult.message.indexOf('message') != -1){
 		_this.commApiResult = 'The Aqua Teens Love You';
 	}
 
@@ -148,8 +152,7 @@ function CommController($rootScope, $state, ContentApis) {
 	};
 
 	getStringOut();
-}
-CommController.$inject = ["$rootScope", "$state", "ContentApis"];;
+};
 
 angular.module('kbyteApp')
 	.controller('CommController', CommController);
@@ -220,8 +223,7 @@ function HomeController($rootScope, $state) {
 	/* End Practice Section */
 
 	_this.stringOut = getStringOut();
-}
-HomeController.$inject = ["$rootScope", "$state"];;
+};
 
 
 angular.module('kbyteApp')
@@ -240,29 +242,23 @@ module.exports = HomeController;
 'use strict';
 
 /* @ngInject */
-function HtmlEditController (EventFactory, EditorService){
+function HtmlEditController ($scope, EventFactory, EditorService){
 
 	var _this = this;
 	var currentElement;
 
-	_this.htmlelements = [
-        "h1",
-		"h4",
-		"p"
-	];
+	// TODO find out why this is having issues being bound
+	// to _this
+	$scope.htmlelements=["h1","h4","p"];
 
-	_this.getElement = function(){
-		return currentElement;
-	}
 
+	// The _this binding is working fine here
 	_this.setElement = function(elementValue){
 		console.log(" element value "+elementValue);
-
-		EventFactory.broadcast('elementset', elementValue);
+		EventFactory.emit('elementset', elementValue);
 	};
 
 }
-HtmlEditController.$inject = ["EventFactory", "EditorService"];
 
 angular.module('kbyteApp')
 	.controller('HtmlEditController', HtmlEditController);
@@ -271,6 +267,44 @@ angular.module('kbyteApp')
 module.exports = HtmlEditController;
 
 },{}],6:[function(require,module,exports){
+/**
+ * Created by kellysmith on 3/26/16.
+ *
+ * 2016 pokingBears.com
+ */
+
+function LoginController(ContentApis, ModalScopeService) {
+
+	var userPassService = ContentApis;
+
+	var parentModalScope = ModalScopeService.getModalScope();
+
+    var _this = this;
+	_this.username = "Kelly";
+	_this.logpass = "Enter Your User Name and Password";
+
+	_this.error = null;
+	_this.allowSave = true;
+	_this.okLabel = "Submit";
+	_this.cancelLabel = "Cancel";
+
+	_this.proceed = function() {
+
+	};
+
+	_this.cancel = function() {
+		console.log("  cancel called ");
+		parentModalScope.cancel();
+	}
+
+}
+
+angular.module('kbyteApp')
+	.controller('LoginController', LoginController);
+
+module.exports = LoginController;
+
+},{}],7:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/9/16.
  *
@@ -357,8 +391,7 @@ function MapController($state, $rootScope, geolocation, ContentApis, MapService)
 			});
 	};
 
-}
-MapController.$inject = ["$state", "$rootScope", "geolocation", "ContentApis", "MapService"];;
+};
 
 angular.module('kbyteApp')
 	.controller('MapController', MapController);
@@ -432,8 +465,7 @@ function MapQueryController($log, $rootScope, geolocation, ContentApis, MapServi
 				console.log('Error ' + queryResults);
 			})
 	};
-}
-MapQueryController.$inject = ["$log", "$rootScope", "geolocation", "ContentApis", "MapService"];;
+};
 
 
 angular.module('kbyteApp')
@@ -442,7 +474,66 @@ angular.module('kbyteApp')
 
 module.exports = MapController;
 module.exports = MapQueryController;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+/**
+ * Created by kellysmith on 3/26/16.
+ *
+ * 2014 pokingBears.com
+ */
+
+function ModalController($scope, $modal, $timeout, EventFactory, ContentApis, ModalScopeService) {
+
+	var userPassService = ContentApis;
+    var _this = this;
+
+	var mController;
+	var mControllerAs;
+
+	ModalScopeService.setModalScope(_this);
+
+	function raiseModal(){
+
+		console.log(" raise modal function called ");
+
+		var modalInstance = $modal.open({
+				templateUrl: 'views/modal_useraccount.html',
+				scope:$scope,
+				keyboard: true,
+				controller:mController,
+				controllerAs:mControllerAs,
+				bindToController:{
+					mControllerAs:'='
+				}
+	        });
+
+		_this.cancel = function(event) {
+			console.log(" cancel in parent clicked ");
+			modalInstance.dismiss('cancel');
+		};
+	};
+
+
+	EventFactory.subscribe('login-modal',function(e, userInfo){
+
+		console.log("  user info  "+userInfo[1]);
+
+		mController = userInfo[1][0];
+		mControllerAs = userInfo[1][1];
+
+		$timeout(function(){
+			raiseModal();
+		},100)
+
+	});
+
+}
+
+angular.module('kbyteApp')
+	.controller('ModalController', ModalController);
+
+module.exports = ModalController;
+
+},{}],9:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/9/16.
  *
@@ -450,47 +541,33 @@ module.exports = MapQueryController;
  */
 
 /* @ngInject */
-function NavController($rootScope, $state) {
+function NavController($state, EventFactory, ContentApis) {
 
 	var _this = this;
 	this.navGreeting = 'KByteDesign';
 	console.log(" this.navGreeting ", this.navGreeting);
 	this.winLocation = window.location.href;
 
+	var userInfoService = ContentApis;
+
 	$("#signin").click(function (e) {
 		console.log("  we have clicky poo");
-		raiseSigninModal(e);
+		raiseLoginModal(e);
 	})
 
-	var raiseSigninModal = function (evt) {
+	function raiseLoginModal(evt) {
 
-		var littleGreenMen = function (val) {
-			console.log(" are we not men? " + val);
-		}
-		console.log(" signin modal function called ");
-		var tObj = {};
-		tObj.signinName = "";
-		tObj.pass = "";
-
-		for (var x in tObj) {
-			console.log(" print the value sir " + tObj[x])
-		}
-
-		tObj.funval = function (val) {
-			console.log(" are we not men? " + val);
-		};
-
-		tObj.funval(" no sir, we are devo");
+		EventFactory.broadcast('login-modal',[evt,["LoginController","loginc"]]);
+		console.log(" loginModal raised ");
 	};
 
-}
-NavController.$inject = ["$rootScope", "$state"];;
+};
 
 angular.module('kbyteApp')
 	.controller('NavController', NavController);
 
 module.exports = NavController;
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/9/16.
  *
@@ -558,8 +635,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 
 	});
 
-}
-SocketController.$inject = ["$log", "$scope", "ChatSocket", "messageFormatter", "nickName"];;
+};
 
 angular.module('kbyteApp')
 	.controller('SocketController', SocketController)
@@ -570,14 +646,22 @@ angular.module('kbyteApp')
 	});
 
 module.exports = SocketController;
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/17/16.
  *
- * 2014 pokingBears.com
+ * 2016 pokingBears.com
  */
 
-function editorElement(){
+function editorElement(EditorService){
+
+
+	//console.log(" ping the directive ");
+
+	function link(scope){
+
+		//scope.htmlelements = EditorService.getElements();
+	}
 
 	return {
 
@@ -589,17 +673,17 @@ function editorElement(){
 		bindToController:{
 			htmlelements:'='
 		},
-		template:'<button class="btn btn-default" ng-repeat="htmlelement in htmledit.htmlelements" ng-click="htmledit.setElement(htmlelement)">{{htmlelement}}</button>'
+		template:['<button class="btn btn-default" ng-repeat="element in htmlelements" ng-click="htmledit.setElement(element)"><span class="edit-btn-text">{{element}}</span></button>'].join(''),
+		link:link
 
 	};
 
-	console.log(" ping the directive ");
-
 }
 
-function editorCanvas(EventFactory){
+function editorCanvas(EventFactory, EditorService, $timeout){
 
 	var canvasElement;
+	var elIdx = 0;
 
 	function link(element, attrs, ctrl){
 
@@ -607,18 +691,56 @@ function editorCanvas(EventFactory){
 
 		EventFactory.subscribe('elementset',function(e, newEl){
 			for(poopy in e) {
-				console.log(" big ups to event factories " + poopy+ "   "+newEl);
+				console.log(" rip to phife ** forever tribe " + poopy+ "   "+newEl);
 			}
-			doStuff(newEl);
-		})
+			setElement(newEl);
+		});
 	}
 
-	function doStuff(newEl){
+	function setElement(newEl){
+
+		var storedSelections = [];
 
 		var newElement = angular.element("<"+newEl+"></"+newEl+">");
 		console.log(" now we be talking "+newElement);
+
 		$('.content-entry').append(newElement);
+		var numElString = elIdx.toString();
+		var newId = 'el'+numElString;
+		$(newElement).attr('id',newId);
+
+		$(newElement).html("\u0001");
+
+		$timeout(function() {
+			if(newElement)
+				$(newElement).focus()
+				var selection = rangy.getSelection();
+				var range = rangy.createRange();
+				var startNode = document.getElementById(newId);
+				range.setStartAfter(startNode);
+				range.setEndAfter(startNode);
+
+				//apply this range to the selection object
+				selection.removeAllRanges();
+				selection.addRange(range);
+				elIdx ++;
+                //;
+				console.log(" focus called "+newElement);
+		},20);
+
+
+		// do rangy stuff
+
+		if(window.getSelection){
+			var currentSelection = window.getSelection();
+			for(var i = 0; i < currentSelection.rangeCount; i++){
+				storedSelections.push(currentSelection.getRangeAt(i));
+				console.log("  current selection range count "+currentSelection.getRangeAt(i));
+			}
+		}
+
 	}
+
 
 	return {
 
@@ -627,15 +749,11 @@ function editorCanvas(EventFactory){
 		scope:{},
 		controller:'HtmlEditController',
 		controllerAs:'htmledit',
-		bindToController: {
-			htmlelements: '='
-		},
-		template:'<div class="form-group"><div class="content-entry text-background" contenteditable="true" ng-maxlength="1000"></div></div>',
+		template:['<div class="form-group"><div class="content-entry text-background" contenteditable="true" ng-maxlength="1000"></div></div>'].join(''),
 		link:link
 	};
 
 }
-editorCanvas.$inject = ["EventFactory"];
 
 angular.module('kbyteApp')
 	.directive("editorElement", editorElement)
@@ -644,7 +762,7 @@ angular.module('kbyteApp')
 
 module.exports = editorElement;
 module.exports = editorCanvas;
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 // chaining instead or var; give app name then app dependencies inside array brackets
 
 
@@ -655,7 +773,7 @@ var angularInit = (function(){
 
 
 	angular.module('kbyteApp')
-		.config(["$stateProvider", "$urlRouterProvider", "$httpProvider", function ($stateProvider, $urlRouterProvider, $httpProvider) {
+		.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
 			$urlRouterProvider.otherwise('/home');
 
@@ -682,7 +800,7 @@ var angularInit = (function(){
 					templateUrl: 'views/kmapquery.html'
 				})
 
-		}]);
+		});
 
 })();
 
@@ -694,7 +812,7 @@ module.exports = angularInit;
 
 
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/18/16.
  *
@@ -705,16 +823,25 @@ module.exports = angularInit;
 
 function EditorService ($rootScope){
 
-	this.broadcastElementChange = function(val){
+
+	this.getElements = function(){
+
+		var htmlelements=[
+			"h1",
+			"h4",
+			"p"
+		];
+
+		return htmlelements;
 
 	}
 
+
 }
-EditorService.$inject = ["$rootScope"];
 
 angular.module('kbyteApp')
 	.service('EditorService', EditorService);
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * Created by kellysmith on 3/20/16.
  *
@@ -729,22 +856,26 @@ function EventFactory($rootScope) {
 	};
 
 	var broadcast = function (eventName, data) {
-		$rootScope.$emit(eventName, data);
+		$rootScope.$broadcast(eventName, data);
 	};
+
+	var emit = function(eventName, data){
+		$rootScope.$emit(eventName, data)
+	}
 
 	return {
 		subscribe: subscribe,
-		broadcast: broadcast
+		broadcast: broadcast,
+		emit: emit
 	};
-}
-EventFactory.$inject = ["$rootScope"];;
+};
 
 angular.module('kbyteApp').factory('EventFactory', EventFactory);
 
 module.exports = EventFactory;
 
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 /* @ngInject */
@@ -927,13 +1058,36 @@ function MapService($q, $rootScope, ContentApis){
 	return googleMapService;
 
 }
-MapService.$inject = ["$q", "$rootScope", "ContentApis"];
 
 angular.module('kbyteApp')
 	.factory('MapService', MapService);
 
 module.exports = MapService;
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
+/**
+ * Created by kellysmith on 3/27/16.
+ *
+ * 2016 pokingBears.com
+ */
+
+function ModalScopeService() {
+
+	var modalScope = {};
+
+	this.setModalScope = function(mScope){
+		modalScope = mScope;
+	};
+
+	this.getModalScope = function(){
+		return modalScope;
+	}
+}
+
+angular.module('kbyteApp')
+	.service('ModalScopeService', ModalScopeService);
+
+module.exports = ModalScopeService;
+},{}],17:[function(require,module,exports){
 /**
  * Created by kellysmith on 2/22/16.
  *
@@ -946,13 +1100,12 @@ var ChatSocket =  function (socketFactory) {
 	socket.forward('broadcast');
 	return socket;
 };
-ChatSocket.$inject = ["socketFactory"];
 
 angular.module('kbyteApp')
 	.factory('ChatSocket', ChatSocket);
 
 module.exports = ChatSocket;
-},{}],15:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * Created by kellysmith on 2/11/16.
  *
@@ -980,13 +1133,17 @@ function ContentApis ($q, $http){
 
 	apiService.getEntry = function(){
 
-		var entryVar = " Entry message ";
+
+		var entryVar = {
+			message:" Entry message ",
+			language:"German"
+		}
 
 		return entryVar;
 	};
 
 	apiService.setEntry = function(userObject){
-
+		console.log(" user object  "+userObject.userName);
 		return $http({
 			method: 'POST',
 			url: apiService.apiRoot+'users/uentries',
@@ -1011,7 +1168,17 @@ function ContentApis ($q, $http){
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
 			}
-		})
+		}).then(
+			function(response){
+				//console.log(" response data "+response.data);
+				return response.data;
+			},
+			function (httpError) {
+				// translate the error
+				throw httpError.status + " : " +httpError.data;
+			}
+
+		)
 	};
 
 	apiService.setLocation = function(userObject){
@@ -1025,7 +1192,7 @@ function ContentApis ($q, $http){
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
 			}
-		});
+		})
 
 	};
 
@@ -1061,7 +1228,6 @@ function ContentApis ($q, $http){
 
 	return apiService;
 }
-ContentApis.$inject = ["$q", "$http"];
 
 angular.module('kbyteApp')
 	.factory('ContentApis', ContentApis);

@@ -55,7 +55,6 @@ gulp.task('browserifydev', function() {
 	return browserify('./public/scripts/browserifymain.js')
 		.bundle()
 		.pipe(source('bundle.js')) // gives streaming vinyl file object
-		.pipe(ngAnnotate())
 		.pipe(gulp.dest('./public/scripts'));
 });
 

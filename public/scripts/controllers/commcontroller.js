@@ -16,7 +16,7 @@ function CommController($rootScope, $state, ContentApis) {
 
 	_this.commApiResult = commApis.getEntry();
 
-	if(_this.commApiResult.indexOf('message') != -1){
+	if(_this.commApiResult.message.indexOf('message') != -1){
 		_this.commApiResult = 'The Aqua Teens Love You';
 	}
 

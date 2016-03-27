@@ -1,0 +1,33 @@
+<div ng-controller="LoginController as loginc">
+<div class="modal-header">
+    <h3 class="modal-title">{{loginc.username}}: {{loginc.logpass}}</h3>
+</div>
+<div class="modal-body row">
+    <form name="passUpdate">
+        <div class="kb-user-name col-md-12 col-xs-12">
+            <input input-focus type="text" name="username" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
+                   ng-model="loginc.userInfo.username" placeholder="&nbsp;&nbsp;Enter New User Name">
+        </div>
+        <div id="passwords" class="col-md-12 col-xs-12">
+            <div>
+                <input input-focus type="password" name="userpassword" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
+                ng-model="changeInfo.Password" placeholder="&nbsp;&nbsp;Enter Password">
+                <input input-focus type="password" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
+                ng-model="changeInfo.PasswordConfirm" placeholder="&nbsp;&nbsp;Confirm Password">
+                <p class="alert alert-danger" ng-show="loginc.error">{{loginc.error}}</p>
+            </div>
+            <div>
+                <span class="alert alert-danger" ng-show="passError">{{loginc.passError}}</span>
+                <span class="alert alert-danger" ng-show="passUpdate.userpassword.$error.minlength">Password Must Be 8 Characters In Length</span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="processing" ng-click="proceed()">
+        <i ng-if="processing" class="fa fa-circle-o-notch fa-spin"></i>
+        {{loginc.okLabel}}
+    </button>
+    <button class="btn btn-warning" ng-disabled="processing" ng-click="loginc.cancel()">{{loginc.cancelLabel}}</button>
+</div>
+</div>

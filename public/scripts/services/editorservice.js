@@ -8,9 +8,19 @@
 
 function EditorService ($rootScope){
 
-	this.broadcastElementChange = function(val){
+
+	this.getElements = function(){
+
+		var htmlelements=[
+			"h1",
+			"h4",
+			"p"
+		];
+
+		return htmlelements;
 
 	}
+
 
 }
 

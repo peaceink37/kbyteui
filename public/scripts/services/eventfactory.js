@@ -12,12 +12,17 @@ function EventFactory($rootScope) {
 	};
 
 	var broadcast = function (eventName, data) {
-		$rootScope.$emit(eventName, data);
+		$rootScope.$broadcast(eventName, data);
 	};
+
+	var emit = function(eventName, data){
+		$rootScope.$emit(eventName, data)
+	}
 
 	return {
 		subscribe: subscribe,
-		broadcast: broadcast
+		broadcast: broadcast,
+		emit: emit
 	};
 };
 

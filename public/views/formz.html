@@ -5,19 +5,19 @@
 
                 <form class="form-horizontal" name="userEntryForm" ng-submit="formz.submitUserEntry(userEntryForm.$valid)">
                     <div>
-                        <label class="col-xs-12">Enter Your User Id</label>
+                        <label> Current User: {{formz.formInfo.userName}}</label>
+                        <!--
                         <input class="input-md" type="text" ng-model="formz.userIdChange">
                         <input ng-model="formz.formInfo.userName" type="text">
+                        -->
+
                     </div>
                     <div>
                         <div class="form-group">
                             <label>{{formz.formInfo.userId}}</label>
                         </div>
-                        <div class="form-group">
-                            <label>{{formz.formInfo.userName}}</label>
-                        </div>
                         <div ng-controller='HtmlEditController as htmledit'>
-                            <div>
+                            <div class="editor-buttons">
                                 <editor-element></editor-element>
                             </div>
 

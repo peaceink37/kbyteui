@@ -5,37 +5,24 @@
  */
 
 /* @ngInject */
-function NavController($rootScope, $state) {
+function NavController($state, EventFactory, ContentApis) {
 
 	var _this = this;
 	this.navGreeting = 'KByteDesign';
 	console.log(" this.navGreeting ", this.navGreeting);
 	this.winLocation = window.location.href;
 
+	var userInfoService = ContentApis;
+
 	$("#signin").click(function (e) {
 		console.log("  we have clicky poo");
-		raiseSigninModal(e);
+		raiseLoginModal(e);
 	})
 
-	var raiseSigninModal = function (evt) {
+	function raiseLoginModal(evt) {
 
-		var littleGreenMen = function (val) {
-			console.log(" are we not men? " + val);
-		}
-		console.log(" signin modal function called ");
-		var tObj = {};
-		tObj.signinName = "";
-		tObj.pass = "";
-
-		for (var x in tObj) {
-			console.log(" print the value sir " + tObj[x])
-		}
-
-		tObj.funval = function (val) {
-			console.log(" are we not men? " + val);
-		};
-
-		tObj.funval(" no sir, we are devo");
+		EventFactory.broadcast('login-modal',[evt,["LoginController","loginc"]]);
+		console.log(" loginModal raised ");
 	};
 
 };

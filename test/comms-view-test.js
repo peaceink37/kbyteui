@@ -81,71 +81,8 @@ describe(' properly structured json response is avail to controller', function()
 });
 
 
-describe(' the almighty fizz buzz', function(){
-
-	
-	it(' should return proper modulo values', (function() {	
-		
-			var value = 0;
-
-			for(var i = 1; i<101; i++){
-
-				value = i;
-				
-				if(i % 3 === 0 && i % 5 === 0){
-					value = "FizzBuzz";
-					expect(i % 3).toEqual(0);
-					expect(i % 5).toEqual(0);
-				
-				} else if (i%3 === 0){
-					value = "Fizz";
-					expect(i % 3).toEqual(0);
-					
-				} else if (i % 5 === 0){
-					value = "Buzz";
-					expect(i % 5).toEqual(0);
-					
-				} else {
-					//console.log(value);
-				}
-
-				console.log(value)
-					
-			}
-	
-		console.log(" foo bar we ");
-
-	}));
-
-});
-
-describe(' test string and array method ', function(){
 
 
-	var sampleJson = {'entries':[{'name':'bob','age':'33'},{'name':'fred','age':'42'},{'name':'george', 'age':'21'}],'umeta':{'id':'331'}};
-
-	var pullArr = sampleJson.entries;
-
-	function arrSorter(a,b){
-
-		if(a.age > b.age){
-			return 1;
-		} else {
-			return -1;
-		}
-	}
-
-	pullArr.sort(arrSorter);
-
-	for(var i = 0; i<pullArr.length; i++){
-		console.log(" num wheels ARR "+pullArr[i].age);
-	}
-
-	for (var thing in sampleJson.entries ){
-		console.log(" thing name "+sampleJson.entries[thing].name);
-	}
-
-});
 
 
 

@@ -25,13 +25,17 @@ function ContentApis ($q, $http){
 
 	apiService.getEntry = function(){
 
-		var entryVar = " Entry message ";
+
+		var entryVar = {
+			message:" Entry message ",
+			language:"German"
+		}
 
 		return entryVar;
 	};
 
 	apiService.setEntry = function(userObject){
-
+		console.log(" user object  "+userObject.userName);
 		return $http({
 			method: 'POST',
 			url: apiService.apiRoot+'users/uentries',
@@ -56,7 +60,17 @@ function ContentApis ($q, $http){
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
 			}
-		})
+		}).then(
+			function(response){
+				//console.log(" response data "+response.data);
+				return response.data;
+			},
+			function (httpError) {
+				// translate the error
+				throw httpError.status + " : " +httpError.data;
+			}
+
+		)
 	};
 
 	apiService.setLocation = function(userObject){
@@ -70,7 +84,7 @@ function ContentApis ($q, $http){
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
 			}
-		});
+		})
 
 	};
 
