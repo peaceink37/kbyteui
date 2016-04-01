@@ -10,6 +10,7 @@ $nav-hover-color: #dadabb;
 $nav-back: #032d39;
 $body-hover-back: #51a5bb;
 $body-btn-back: #5caabb;
+$error-color: #cc0011;
 $standardStaticSize: 1.4em;
 
 html{
@@ -19,6 +20,7 @@ html{
 #map {
   height: 645px;
 }
+
 
 body {
   height:100%;
@@ -41,26 +43,62 @@ body {
   }
 
   .home-spread {
-    height:600px;
+    height: 600px;
     background-image: url(../images/costa-ants.jpg);
     background-repeat: no-repeat;
     margin-top: -40px;
     margin-left: -86px;
     margin-right: -46px;
-    color:#fff;
-    text-shadow:1px 0 $primary-color;
+    color: #fff;
+    text-shadow: 1px 0 $primary-color;
 
+    h3 {
+      padding-top:9%;
+      padding-left:8%;
+    }
 
-  h3 {
-    padding-top:9%;
-    padding-left:8%;
+    h5 {
+      padding-top: 2.33%;
+      padding-left: 8%;
+    }
+
   }
+
 
   h5 {
-    padding-top:2.33%;
-    padding-left:8%;
+    font-size:20px;
+    font-weight:100;
   }
 
+  input{
+    font-size:16px;
+    border:1px solid;
+    width:100%;
+    letter-spacing: 1px;
+    border-color: $body-btn-back;
+  }
+
+  input:focus {
+    outline:none;
+    border-color: $primary-color;
+  }
+
+  .input-error {
+    border-color: $error-color;
+  }
+
+  ::-webkit-input-placeholder { font-weight:200; }
+  ::-moz-placeholder { font-weight:200; } /* firefox 19+ */
+  :-ms-input-placeholder { font-weight:200; } /* ie */
+  input:-moz-placeholder { font-weight:200; }
+
+  .kb-alert{
+    margin-bottom: 20px;
+  }
+
+  .kb-alert-danger {
+    color:$error-color;
+    background-color:transparent;
   }
 
   textarea {
@@ -109,74 +147,74 @@ body {
     padding:5px;
   }
 
+  .modal-footer .request-processing{
+    height: 22px;
+    width: 22px;
+    margin-right: 22px;
+  }
 
-}
-
-
-
-form .user-submit{
-  padding-top:15px;
-  padding-bottom:15px;
-}
-
-.user-entries{
-  list-style-type: none;
-  font-size: $standardStaticSize;
-  color: $nav-back;
-}
-
-.pad-buffer {
-  padding:10px 0px;
-}
-
-
-.navbar {
-  color: $nav-color;
-  background-color: $nav-back;
-  //background-image: url(../images/sos-dark.png);
-  background-repeat: repeat;
-  border-bottom:5px solid $primary-color;
-  border-radius:0;
-
-
-  .logo {
-    padding-left:15px;
+  .modal-signin{
+    margin:0 10px 10px 0;
+    padding:5px;
+    border-radius:3px;
   }
 
 
-  .user-signin {
-    margin-top: 10px;
+  form .user-submit{
+    padding-top:15px;
+    padding-bottom:15px;
   }
 
-  .user-signin a {
-    color: $nav-color;
-    text-shadow: 1px 0 $primary-color;
-    font-size: 1.2em;
-    font-weight: 200;
-    background-color: transparent;
+  .user-entries{
+    list-style-type: none;
+    font-size: $standardStaticSize;
+    color: $nav-back;
   }
 
-  .user-signin a:hover, .user-signin a:active {
-    color: $body-hover-back;
-    cursor:pointer;
-    background-color: transparent;
-    transition: color 500ms;
-    text-decoration:none;
+  .pad-buffer {
+    padding:10px 0px;
   }
 
-  .accordian {
-    font-size:3.3em;
-  }
 
   nav {
 
-    margin-top:8px;
+    padding-top: 6px;
+    color: $nav-color;
+    background-color: $nav-back;
+    //background-image: url(../images/sos-dark.png);
+    background-repeat: repeat;
+
+    .logo {
+      padding-left: 15px;
+    }
+
+    .user-signin {
+      margin-top: 10px;
+    }
+
+    .user-signin a {
+      color: $nav-color;
+      text-shadow: 1px 0 $primary-color;
+      font-size: 1.2em;
+      font-weight: 200;
+      background-color: transparent;
+    }
+
+    .user-signin a:hover, .user-signin a:active {
+      color: $body-hover-back;
+      cursor: pointer;
+      background-color: transparent;
+      transition: color 500ms;
+      text-decoration: none;
+    }
+
+    .accordian {
+      font-size: 3.3em;
+    }
 
     .nav {
 
-      //background-color:#000000;
-      padding:1px 10px;
-      //border-radius:9px;
+      padding: 1px 10px;
 
     }
 
@@ -198,14 +236,20 @@ form .user-submit{
         background-color: transparent;
       }
 
-      a:hover, a:active {
+      a:hover, a:active, a:focus {
         color: $body-hover-back;
         background-color: transparent;
-        text-decoration:none;
+        text-decoration: none;
         transition: color 500ms;
       }
 
     }
+
+  }
+
+  nav.navbar{
+    border-radius:0;
+    border-bottom: 5px solid $body-btn-back;
   }
 
 }

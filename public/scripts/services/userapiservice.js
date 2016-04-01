@@ -23,6 +23,31 @@ function ContentApis ($q, $http){
 		apiService.apiRoot = "http://kbytedesign.com/";
 	}
 
+	apiService.userAuth = function(userPass, callback){
+
+		console.log(" user pass displayname "+userPass.displayname);
+
+		return $http({
+			method:'POST',
+			url:apiService.apiRoot+'api/userauth',
+			data:JSON.stringify(userPass),
+			headers:{
+				'Content-Type':'application/json; charset=utf-8'
+			}
+		}).then(
+			function(response){
+				// put email already used error and such here
+				console.log(" client response data for auth "+response.data);
+				callback(response.data);
+
+			},
+			function(httpError){
+				throw httpError.status+" : "+httpError.data;
+			}
+		)
+
+	}
+
 	apiService.getEntry = function(){
 
 

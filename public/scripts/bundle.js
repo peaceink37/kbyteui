@@ -273,28 +273,55 @@ module.exports = HtmlEditController;
  * 2016 pokingBears.com
  */
 
-function LoginController(ContentApis, ModalScopeService) {
+function LoginController(ContentApis, ModalScopeService, $timeout) {
 
 	var userPassService = ContentApis;
 
 	var parentModalScope = ModalScopeService.getModalScope();
 
     var _this = this;
-	_this.username = "Kelly";
-	_this.logpass = "Enter Your User Name and Password";
-
+	_this.userInfo = {};
+	_this.userInfo.email = "me@duh.net";
+	_this.userInfo.displayname;
+	_this.userInfo.userpass;
 	_this.error = null;
-	_this.allowSave = true;
+	_this.processing = false;
+	_this.postProcessing = {};
+	_this.postProcessing.status;
 	_this.okLabel = "Submit";
 	_this.cancelLabel = "Cancel";
 
+
 	_this.proceed = function() {
+
+		console.log(" proceed be called "+_this.userInfo.displayname+"  pwd  "+_this.userInfo.userpass);
+		_this.processing = true;
+	    if(_this.userInfo.userpass.length < 6){
+		    console.log(" pwd length ",_this.userInfo.userpass.length)
+		    return;
+	    }
+
+		userPassService.userAuth(_this.userInfo, processResults);
 
 	};
 
 	_this.cancel = function() {
 		console.log("  cancel called ");
 		parentModalScope.cancel();
+	}
+
+	function processResults(resMessage){
+
+		console.log(" res message "+resMessage.message);
+		if(resMessage.message === "true"){
+			_this.postProcessing.status = "Update Successful";
+			$timeout(function(){
+				_this.processing = false;
+				parentModalScope.cancel();
+			},500);
+
+		}
+
 	}
 
 }
@@ -1129,6 +1156,31 @@ function ContentApis ($q, $http){
 		apiService.apiRoot = "http://localhost:3000/";
 	} else {
 		apiService.apiRoot = "http://kbytedesign.com/";
+	}
+
+	apiService.userAuth = function(userPass, callback){
+
+		console.log(" user pass displayname "+userPass.displayname);
+
+		return $http({
+			method:'POST',
+			url:apiService.apiRoot+'api/userauth',
+			data:JSON.stringify(userPass),
+			headers:{
+				'Content-Type':'application/json; charset=utf-8'
+			}
+		}).then(
+			function(response){
+				// put email already used error and such here
+				console.log(" client response data for auth "+response.data);
+				callback(response.data);
+
+			},
+			function(httpError){
+				throw httpError.status+" : "+httpError.data;
+			}
+		)
+
 	}
 
 	apiService.getEntry = function(){

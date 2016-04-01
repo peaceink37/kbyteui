@@ -5,29 +5,34 @@
 <div class="modal-body row">
     <form name="passUpdate">
         <div class="kb-user-name col-md-12 col-xs-12">
-            <input input-focus type="text" name="username" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
-                   ng-model="loginc.userInfo.username" placeholder="&nbsp;&nbsp;Enter New User Name">
+            <h5>Email</h5>
+            <input input-focus class="modal-signin" type="text" name="email" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
+                   ng-model="loginc.userInfo.email" placeholder="&nbsp;&nbsp;name@example.com">
         </div>
         <div id="passwords" class="col-md-12 col-xs-12">
             <div>
-                <input input-focus type="password" name="userpassword" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
-                ng-model="changeInfo.Password" placeholder="&nbsp;&nbsp;Enter Password">
-                <input input-focus type="password" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
-                ng-model="changeInfo.PasswordConfirm" placeholder="&nbsp;&nbsp;Confirm Password">
-                <p class="alert alert-danger" ng-show="loginc.error">{{loginc.error}}</p>
+                <h5>Password</h5>
+                <input input-focus class="modal-signin" type="password" name="userpassword" pattern=".{6,}" ng-minlength="6" ng-maxlength="64"
+                ng-model="loginc.userInfo.userpass" placeholder="&nbsp;&nbsp;At Least Six Characters">
+                <p class="kb-alert kb-alert-danger" ng-show="loginc.error">{{loginc.error}}</p>
             </div>
             <div>
-                <span class="alert alert-danger" ng-show="passError">{{loginc.passError}}</span>
-                <span class="alert alert-danger" ng-show="passUpdate.userpassword.$error.minlength">Password Must Be 8 Characters In Length</span>
+                <span class="kb-alert kb-alert-danger" ng-show="passError">{{loginc.passError}}</span>
+                <span class="kb-alert kb-alert-danger" ng-show="passUpdate.userpassword.$error.minlength">Password Must Be 6 Characters In Length</span>
             </div>
+        </div>
+        <div class="kb-user-name col-md-12 col-xs-12">
+            <h5>Set or Change Display Name</h5>
+            <input input-focus class="modal-signin" type="text" name="displayname" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
+                   ng-model="loginc.userInfo.displayname" placeholder="&nbsp;&nbsp;Display Name">
         </div>
     </form>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-disabled="processing" ng-click="proceed()">
-        <i ng-if="processing" class="fa fa-circle-o-notch fa-spin"></i>
+    <span class="request-processing" ng-if="loginc.processing"><img src="./images/processing-icon.gif" alt="Processing Request"/></span>
+    <button class="btn btn-primary" ng-disabled="loginc.processing" ng-click="loginc.proceed()">
         {{loginc.okLabel}}
     </button>
-    <button class="btn btn-warning" ng-disabled="processing" ng-click="loginc.cancel()">{{loginc.cancelLabel}}</button>
+    <button class="btn btn-warning" ng-disabled="loginc.processing" ng-click="loginc.cancel()">{{loginc.cancelLabel}}</button>
 </div>
 </div>
