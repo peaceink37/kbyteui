@@ -23,11 +23,11 @@ describe(' test string and array method ', function(){
 	pullArr.sort(arrSorter);
 
 	for(var i = 0; i<pullArr.length; i++){
-		console.log(" num wheels ARR "+pullArr[i].age);
+		console.log(' num wheels ARR '+pullArr[i].age);
 	}
 
 	for (var thing in sampleJson.entries ){
-		console.log(" thing name "+sampleJson.entries[thing].name);
+		console.log(' thing name '+sampleJson.entries[thing].name);
 	}
 
 });
@@ -44,27 +44,23 @@ describe(' the almighty fizz buzz', function(){
 			value = i;
 
 			if(i % 3 === 0 && i % 5 === 0){
-				value = "FizzBuzz";
+				value = 'FizzBuzz';
 				expect(i % 3).toEqual(0);
 				expect(i % 5).toEqual(0);
 
 			} else if (i%3 === 0){
-				value = "Fizz";
+				value = 'Fizz';
 				expect(i % 3).toEqual(0);
 
 			} else if (i % 5 === 0){
-				value = "Buzz";
+				value = 'Buzz';
 				expect(i % 5).toEqual(0);
 
 			} else {
 				//console.log(value);
 			}
 
-			console.log(value)
-
 		}
-
-		console.log(" foo bar we ");
 
 	}));
 
@@ -76,7 +72,7 @@ describe(' reverse an array in place ', function(){
 
 	function filterFunction(arrVal){
 
-		if(typeof arrVal === "string"){
+		if(typeof arrVal === 'string'){
 
 			return arrVal;
 		}
@@ -94,12 +90,12 @@ describe(' reverse an array in place ', function(){
 			var temp = testArray[left];
 			testArray[left] = testArray[right];
 			testArray[right] = temp;
-			console.log(" temp "+temp+"  right  "+right+" left  "+left);
+			//console.log(' temp '+temp+'  right  '+right+' left  '+left);
 		}
 
-		var concatArray = testArray.concat(["willie","tom",2112]);
+		var concatArray = testArray.concat(['willie','tom',2112]);
 		var filterArray = concatArray.filter(filterFunction)
-		console.log("  concat array "+concatArray+"  test array after reverse "+testArray+" filter array "+filterArray);
+		//console.log('  concat array '+concatArray+'  test array after reverse '+testArray+' filter array '+filterArray);
 
 	});
 
@@ -111,12 +107,12 @@ describe(' reverse an array in place ', function(){
 
 		for(left = 0, right = length-1; left<right; left += 1, right -= 1){
 
-			var temp = array[left];
-			array[left] = array[right];
-			array[right] = temp;
+			var temp = testArray[left];
+			testArray[left] = testArray[right];
+			testArray[right] = temp;
 		}
 
-		console.log(" array reverse full length method "+testArray);
+		//console.log(' array reverse full length method '+testArray);
 
 	});
 
@@ -126,17 +122,17 @@ describe(' reverse an array in place ', function(){
 
 describe(' filter an array of object by indexOf ', function(){
 
-	var objArray = [{"name":"bomar", "id":"1"},{"name":"roger", "id":"2"},{"name":"doug", "id":"3"}]
+	var objArray = [{'name':'bomar', 'id':'1'},{'name':'roger', 'id':'2'},{'name':'doug', 'id':'3'}]
 
 	var objMap = new Object();
-	var fakeJson = {"people":[{"name":"bomar", "id":"1"},{"name":"roger", "id":"2"},{"name":"doug", "id":"3"}],
-		"places":[{"city":"rome", "nation":"Italy"},{"city":"Detroit", "nation":"Merica", "city":"Tokyo","nation":"Japan"}]}
+	var fakeJson = {'people':[{'name':'bomar', 'id':'1'},{'name':'roger', 'id':'2'},{'name':'doug', 'id':'3'}],
+		'places':[{'city':'rome', 'nation':'Italy'},{'city':'Detroit', 'nation':'Merica', 'city':'Tokyo','nation':'Japan'}]}
 
 
 	function filterObj(obj, index){
 
-		if(obj.name === "doug"){
-			console.log(" object "+obj.name);
+		if(obj.name === 'doug'){
+			expect(obj.name).toEqual('doug');
 			return obj;
 		}
 	}
@@ -146,7 +142,7 @@ describe(' filter an array of object by indexOf ', function(){
 		var nameObj = objArray.filter(filterObj);
 
 		for( blah in nameObj){
-			console.log(' nameObj jj '+nameObj[0]+"  blah  "+blah);
+			console.log(' nameObj jj '+nameObj[0]+'  blah  '+blah);
 			expect(nameObj[blah].name).toBe('doug');
 		}
 
@@ -161,7 +157,7 @@ describe(' filter an array of object by indexOf ', function(){
 		}
 
 
-		var personuno = {name:"green", age:"big", city:"flint"};
+		var personuno = {name:'green', age:'big', city:'flint'};
 		function updatePerson(name, age, city){
 			this.name = name;
 			this.age = age;
@@ -175,15 +171,15 @@ describe(' filter an array of object by indexOf ', function(){
 
 		dispatch(personuno, updatePerson, ['billy','43','detroit']),
 
-		console.log(" person uno "+personuno.name);
+		console.log(' person uno '+personuno.name);
 
 	})
 
 })
 
-describe(" do an range and sum / reduce operation ", function(){
+describe(' do an range and sum / reduce operation ', function(){
 
-	it(" should include every number in the range", function(){
+	it(' should include every number in the range', function(){
 
 		var range = [1,11];
 		var filledRange = [];
@@ -198,15 +194,15 @@ describe(" do an range and sum / reduce operation ", function(){
 
 			reduced = reduced + (i+1);
 
-			console.log(" filled range "+filledRange+"  reduced "+reduced+" mod i  "+(i%2));
+			//console.log(' filled range '+filledRange+'  reduced '+reduced+' mod i  '+(i%2));
 		}
 
 	})
 })
 
-describe(" it should be an object list ", function(){
+describe(' it should be an object list ', function(){
 
-	it(" write an array to list ", function(){
+	it(' write an array to list ', function(){
 
 		var lArray = [2,4,6,8,10,20,40,80];
 		var last = false;
@@ -233,7 +229,7 @@ describe(" it should be an object list ", function(){
 		function processArray(elem){
 
 			if(elem > 20){
-				console.log(" boom big number "+elem);
+				console.log(' boom big number '+elem);
 			}
 		}
 
@@ -245,14 +241,14 @@ describe(" it should be an object list ", function(){
 
 });
 
-describe(" call methods to change scope ", function(){
+describe(' call methods to change scope ', function(){
 
 	var unit1 = {name:'Marvin', age:42, size:'XXL'};
 	var unit2 = {name:'Zaphod', age:66, size:'XS'};
 
 	it('should shift scope to calling object',function(){
 
-		console.log(" unit 1 HI "+unit1.name);
+		console.log(' unit 1 HI '+unit1.name);
 
 		function update(name, age, size){
 			this.name = name;
@@ -263,12 +259,12 @@ describe(" call methods to change scope ", function(){
 		// arguments must match
 		update.call(unit1, 'Jimmy', 52, 'L');
 
-		console.log(" unit 1 "+unit1.name);
+		console.log(' unit 1 '+unit1.name);
 	})
 
 });
 
-describe(" apply method to change scope w argument array ", function(){
+describe(' apply method to change scope w argument array ', function(){
 
 	var thingy1 = {name:'bubba', age:'50', home:'Flint'};
 
@@ -284,12 +280,12 @@ describe(" apply method to change scope w argument array ", function(){
 
 	   	update.apply(thingy1, args);
 
-		console.log("  thingy1  "+thingy1.name);
+		console.log('  thingy1  '+thingy1.name);
 	});
 
 });
 
-describe(" use spread operator to flatten array args ", function(){
+describe(' use spread operator to flatten array args ', function(){
 
 	var aNumbers = [2,5,4,4,3];
 	var unit1 = {name:'Marvin', age:42, size:'XXL'};
@@ -302,7 +298,7 @@ describe(" use spread operator to flatten array args ", function(){
 
 				return prev + curr;
 			});
-			console.log(" aNumbers " + flatA);
+			console.log(' aNumbers ' + flatA);
 
 		}
 
@@ -311,35 +307,35 @@ describe(" use spread operator to flatten array args ", function(){
 		}
 
 		var list1 = sliceArgList(2,4,6);
-		console.log(" list1 "+list1.length);
+		console.log(' list1 '+list1.length);
 
 		flatNums(aNumbers);
 	});
 })
 
-describe(" returning inner functions ", function(){
+describe(' returning inner functions ', function(){
 
-	it(" should return content of inner function", function(){
-		var monkeyShines = "wowo wowo";
+	it(' should return content of inner function', function(){
+		var monkeyShines = 'wowo wowo';
 		function mainFunction() {
 
 			function subFunction() {
-				var str = "foo";
-				var surly = "for sure";
+				var str = 'foo';
+				var surly = 'for sure';
 				return str;
 			}
 			return subFunction();
 		}
 
 		var test = mainFunction();
-		console.log("  test inner function "+test+"  monkey s "+monkeyShines);
+		console.log('  test inner function '+test+'  monkey s '+monkeyShines);
 
 	});
 });
 
-describe(" array mapping ", function(){
+describe(' array mapping ', function(){
 
-	it(" should reformat objects ", function(){
+	it(' should reformat objects ', function(){
 		var kvArray = [{key:1, value:10}, {key:2, value:20}, {key:3, value: 30}];
 		var reformattedArray = kvArray.map(function(obj){
 			var rObj = {};
@@ -364,16 +360,16 @@ describe(" array mapping ", function(){
 
 });
 
-describe(" array data manipulation - sorting slicing ", function(){
+describe(' array data manipulation - sorting slicing ', function(){
 
 	//var sortingArr = [4,3,66,24,51,5,68];
-	var sortingArr = ["jim","bob","frank","susie","joan","mable"];
+	var sortingArr = ['jim','bob','frank','susie','joan','mable'];
 	var n = 3;
 
 	//largest(1, [2,3,4]) == 4;
 	//largest(2, [2,5,7]) == 5,7;
 
-	it(" should sort from low to hi and slice from hi ", function() {
+	it(' should sort from low to hi and slice from hi ', function() {
 
 		var newList;
 
@@ -389,15 +385,52 @@ describe(" array data manipulation - sorting slicing ", function(){
 			})
 
 			newList = tempList.slice(-n);
-			console.log(" newList " + newList + " ccc templist length " + tempList.length);
+			console.log(' newList ' + newList + ' ccc templist length ' + tempList.length);
 		}
-
-
 
 		largest(n, sortingArr);
 	});
 
 
 });
+
+describe(' nested function returns ', function(){
+
+	   it(' returns nested values ', function(){
+
+		       var complicated = function(x){
+			       console.log(' complicated x var '+x);
+			       var ya = 1;
+			       var foo = function(){
+
+				       ya += ya*x+1;
+				       //return ya;
+				       console.log(' xx complicated ya var '+ya);
+
+				       if(ya < 100){
+					       foo(x)
+				       } else {
+					       console.log(' else value for ya '+ya);
+					       return ya;
+				       }
+
+			       }
+
+			       foo(x);
+			       //return foo(foo(foo(x)));
+		       }
+
+		   console.log(' complicated nested function  ',complicated(3))
+	   })
+
+});
+
+
+
+
+
+
+
+
 
 

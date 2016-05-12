@@ -5,12 +5,18 @@
  */
 
 /* @ngInject */
-function NavController($state, EventFactory, ContentApis) {
+function NavController($state, EventFactory, ContentApis, UserAuthService) {
 
 	var _this = this;
 	this.navGreeting = 'KByteDesign';
 	console.log(" this.navGreeting ", this.navGreeting);
 	this.winLocation = window.location.href;
+
+	//var userAuth = UserAuthService.getAuthObject();
+	//if(typeof userAuth === 'object'){
+	//	console.log(" user auth email and token in nav controller  "+userAuth.email+"  "+userAuth.displayname);
+	//}
+
 
 	var userInfoService = ContentApis;
 

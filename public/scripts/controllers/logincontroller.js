@@ -4,11 +4,12 @@
  * 2016 pokingBears.com
  */
 
-function LoginController(ContentApis, ModalScopeService, $timeout) {
+function LoginController(ContentApis, ModalScopeService, UserAuthService, $timeout) {
 
 	var userPassService = ContentApis;
 
 	var parentModalScope = ModalScopeService.getModalScope();
+	var userAuthObject = {};
 
     var _this = this;
 	_this.userInfo = {};
@@ -44,14 +45,34 @@ function LoginController(ContentApis, ModalScopeService, $timeout) {
 	function processResults(resMessage){
 
 		console.log(" res message "+resMessage.message);
-		if(resMessage.message === "true"){
+		if(resMessage.success === true){
 			_this.postProcessing.status = "Update Successful";
+			buildAuthObject(resMessage);
+
 			$timeout(function(){
 				_this.processing = false;
 				parentModalScope.cancel();
 			},500);
 
+		} else {
+			console.log(" res message "+resMessage.success+"  "+resMessage.email+"  "+resMessage.token);
 		}
+
+	}
+
+	function buildAuthObject(msg){
+
+		userAuthObject = {
+			email:msg.email,
+			displayname:msg.displayname,
+			token:msg.token
+		}
+
+		$timeout(function(){
+			UserAuthService.setAuthObject(userAuthObject);
+		},100);
+
+		UserAuthService.setToken(msg.token);
 
 	}
 

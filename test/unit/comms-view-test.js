@@ -32,6 +32,7 @@ describe('development or production domain', function(){
 
 describe('properly formatted user object is sent to server for processing', function(){
 
+
 	var httpBackend;
 	var url;
 	beforeEach(inject(function ($httpBackend){

@@ -1,59 +1,84 @@
-<div ng-controller='CommController as comms'>
-    <div class="container">
-        <div class="row">
+<div>
+    <!-- controller set up in main.js -->
+    <div class='container'>
+        <div class='row'>
             <form>
-                <section class='col-md-6 col-xs-12' style="margin-top:2px;">
+                <section class='col-md-6 col-xs-12' style='margin-top:2px;'>
 
                     <div ng-controller='SocketController as socketc'>
                         <h3>Socket Visuals - {{socketc.infoData.messageLog}}</h3>
-                        You are known as: <span ng-bind="socketc.infoData.nickName"></span>.
-                        <br/>
-                        Change your nickname with <code>/namechange [yourNewName]</code>
-                        <div class='row' style="margin-top:10px;">
+                        <h5>Current Display Name : {{socketc.infoData.nickName}}</h5>
+                        <div class='row' style='margin-top:10px;'>
                             <div>
-                                <textarea class="text-background" style='width: 100%; height: 200px' ng-disable='true' ng-model='socketc.infoData.messageLog'></textarea>
+                                <textarea class='text-background' style='width: 100%; height: 200px' ng-disable='true' ng-model='socketc.infoData.messageLog'></textarea>
                             </div>
                         </div>
                         <div class='row'>
                             &nbsp;
                         </div>
                         <div class='row'>
-                            <button class='btn btn-sm btn-primary' ng-click="socketc.createRoom(socketc.infoData.createActive)">Add Room</button>
-                            <input ng-if="socketc.infoData.createActive" type="text" ng-max="100" ng-model="socketc.infoData.roomName">
-                            <button class='btn btn-sm btn-primary' ng-click="socketc.joinRoom(socketc.infoData.joinActive)">Join</button>
-                            <input ng-if="socketc.infoData.joinActive" type="text" ng-max="100" ng-model="socketc.infoData.roomName">
-                        </div>
-                        <div class='row'>
-                            <div>
+                            <div class='socket-input'>
                                 <form role='form' novalidate name='form'>
-                                    <div class='form-group' style="margin-top:10px;">
-                                        <input type='text' style='width: 80%; padding:6px; margin-top:2px;'
-                                               required
+                                    <div class='form-group' style='margin-top:10px;'>
+                                        <input ng-if='socketc.chatBtnStates.messaging' type='text'
                                                ng-max='100'
+                                               placeholder='Write A Message'
                                                ng-model='socketc.infoData.message'
-                                               focus>
+                                               ng-focus='socketc.chatBtnStates.messaging'>
                                         <button class='btn btn-sm btn-primary'
-                                                ng-enable='form.$valid'
-                                                ng-click="socketc.sendMessage(socketc.infoData.message)">Send!</button>
+                                                ng-click='socketc.sendMessage(socketc.infoData.message)'>Send!</button>
+                                    </div>
+                                    <div>
+                                        <button class='btn btn-sm btn-primary' ng-model='socketc.chatBtnStates.createActive' 
+                                                btn-checkbox>Add Room</button>
+                                        <button class='btn btn-sm btn-primary' ng-model='socketc.chatBtnStates.joinActive' 
+                                                btn-checkbox>Join</button>
+                                        <button class='btn btn-sm btn-primary' ng-model='socketc.chatBtnStates.changeName' 
+                                                btn-checkbox>Change Display Name</button>
+                                        <button class='btn btn-sm btn-primary' ng-model='socketc.chatBtnStates.activeRooms' 
+                                                btn-checkbox>Active Rooms</button>
+                                    </div>
+                                    <div>
+
+                                        <div ng-if='socketc.chatBtnStates.createActive'>
+                                            <input type='text' ng-max='100'
+                                                placeholder='Create Room' ng-model='socketc.infoData.roomName' ng-focus='socketc.chatBtnStates.createActive'>
+                                            <button class='btn btn-sm btn-primary'
+                                                ng-click='socketc.createRoom()'>Send!</button>
+                                        </div>
+                                        <div ng-if='socketc.chatBtnStates.joinActive'>
+                                            <input ng-if='socketc.chatBtnStates.joinActive' type='text' ng-max='100' placeholder='Join Room'
+                                                ng-model='socketc.infoData.roomName' ng-focus='socketc.chatBtnStates.joinActive'>
+                                            <button class='btn btn-sm btn-primary'
+                                                ng-click='socketc.joinRoom()'>Send!</button>
+                                        </div>
+                                        <div ng-if='socketc.chatBtnStates.changeName'>
+                                            <input type='text' ng-max='100'
+                                                placeholder='Change Display Name' ng-model='socketc.infoData.nickName' ng-focus='socketc.chatBtnStates.changeName'>
+                                            <button class='btn btn-sm btn-primary'
+                                                    ng-click='socketc.joinRoom()'>Send!</button>
+                                            </div>
+                                        <!-- ng repeat to display active room upon user request -->
                                     </div>
                                 </form>
                             </div>
                         </div>
-                        <div class="content-entry" contenteditable="true" ng-maxlength="1000">
+
+                        <div class='content-entry' contenteditable='true' ng-maxlength='1000'>
 
                         </div>
                     </div>
                 </section>
             </form>
 
-            <section class="col-xs-12 col-md-6">
+            <section class='col-xs-12 col-md-6'>
                 <h3>{{comms.stringOut}}</h3>
                 <h5>{{comms.commApiResult}}</h5>
             </section>
-            <section class="col-xs-12 col-md-6">
-                <video controls="true">
-                    <source src="../images/aquateen213.webm" type="video/webm">
-                    <source src="../images/aquateen213.mp4" type="video/mp4">
+            <section class='col-xs-12 col-md-6'>
+                <video controls='true'>
+                    <source src='../images/aquateen213.webm' type='video/webm'>
+                    <source src='../images/aquateen213.mp4' type='video/mp4'>
                     Sorry, your browser doesn't support HTML5 video.
                     You are a relic, and should either crawl underneath a condemned museum
                     or march yourself into the sea.

@@ -5,23 +5,31 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: '../',
 
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['browserify','jasmine-jquery','jasmine'],
 
 
     // list of files / patterns to load in the browser
     files:[
         './bower_components/angular/angular.js',
 	    './bower_components/angular-mocks/angular-mocks.js',
+	    './bower_components/jquery/jquery.js',
+	    './bower_components/angular-ui-router/release/angular-ui-router.js',
+	    './bower_components/angular-bootstrap/ui-bootstrap.js',
+	    './bower_components/angular-sanitize/angular-sanitize.js',
+	    './bower_components/angular-socket-io/socket.js',
+	    './bower_components/socket.io-client/socket.io.js',
+	    './bower_components/angularjs-geolocation/src/geolocation.js',
+	    './bower_components/d3/d3.js',
 	    './public/scripts/main.js',
-	    './public/scripts/controllers/*.js',
-	    './public/scripts/services/*.js',
-	    './public scripts/directives/*.js',
-	    './test/**/*test.js'
+	    './public/scripts/controllers/**/*.js',
+	    './public/scripts/directives/**/*.js',
+	    './public/scripts/services/**/*.js',
+	    './test/unit/**/*test.js'
     ],
 
 
@@ -33,7 +41,12 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+
     },
+
+	browserify:{
+		debug: true
+	},
 
 
     // test results reporter to use
@@ -59,8 +72,10 @@ module.exports = function(config) {
 
 
     // start these browsers
+    // Chrome
+	// PhantomJS
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
 
 
     // Continuous Integration mode

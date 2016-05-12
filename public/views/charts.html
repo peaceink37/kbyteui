@@ -1,0 +1,18 @@
+<div>
+<!-- controller defined in main.js -->
+    <div class="container">
+    <p>{{scharts.logs.data}}</p>
+    <div ng-repeat="l in scharts.logs.data">
+        <span>Key: {{ l.x | date:'medium' }}</span>
+        <span>Elements: {{ l.y }}</span>
+        <hr>
+    </div>
+    <h4>Boom!</h4>
+        <scatter-chart class='data-visual' data="scharts.logs.data"></scatter-chart>
+        <div class="data-visual">
+            <svg id="scales">
+
+            </svg>
+        </div>
+    </div>
+</div>

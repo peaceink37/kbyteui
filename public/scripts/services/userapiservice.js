@@ -6,9 +6,11 @@
 'use strict';
 
 /* @ngInject */
-function ContentApis ($q, $http){
+function ContentApis ($q, $http, UserAuthService){
 
-
+	// Two development modes: 3000 indicates local node
+	// environment, while 8080 is local webserver using
+	// stubbed data
 	function isDevelopmentMode() {
 		return window.location.href.indexOf(':8080') > 0
 			|| window.location.href.indexOf(':3000') > 0;
@@ -18,9 +20,28 @@ function ContentApis ($q, $http){
     apiService.apiRoot = "";
 
 	if(isDevelopmentMode() === true){
-		apiService.apiRoot = "http://localhost:3000/";
+		apiService.apiRoot = "http://192.168.0.6:3000/";
 	} else {
 		apiService.apiRoot = "http://kbytedesign.com/";
+	}
+
+	apiService.getLog = function(callback){
+
+		return $http({
+		    method:'GET',
+			url:apiService.apiRoot+'access.log',
+			headers:{
+				'Content-Type':'text/plain'
+			}
+		}).then(
+			function(logstring){
+				//console.log(' log string in the house '+logstring.data.split('\n'));
+				callback(logstring.data);
+			},
+			function(httpError){
+				throw httpError.status+' : '+httpError.data;
+			}
+		)
 	}
 
 	apiService.userAuth = function(userPass, callback){
@@ -50,7 +71,7 @@ function ContentApis ($q, $http){
 
 	apiService.getEntry = function(){
 
-
+		console.log(" get entry called from resolve ");
 		var entryVar = {
 			message:" Entry message ",
 			language:"German"
@@ -60,13 +81,16 @@ function ContentApis ($q, $http){
 	};
 
 	apiService.setEntry = function(userObject){
-		console.log(" user object  "+userObject.userName);
+
+		var authtoken  = UserAuthService.getToken(UserAuthService.token);
+		console.log(" user object  "+userObject.userName+"   "+authtoken);
 		return $http({
 			method: 'POST',
-			url: apiService.apiRoot+'users/uentries',
+			url: apiService.apiRoot+'users/setuentry',
 			data: JSON.stringify(userObject),
 			headers: {
-				'Content-Type': 'application/json; charset=utf-8'
+				'Content-Type': 'application/json; charset=utf-8',
+				'x-access-token': authtoken
 			}
 		});
 

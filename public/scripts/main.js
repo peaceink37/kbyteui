@@ -4,11 +4,13 @@
 var angularInit = (function(){
 
 	angular.module('kbyteApp', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'geolocation', 'btford.socket-io'])
-	.value('nickName', 'anonymous');
+	.value('nickName', 'kelly');
 
 
 	angular.module('kbyteApp')
 		.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
+
+			//$httpProvider.interceptors.push('AuthInterceptor');
 
 			$urlRouterProvider.otherwise('/home');
 
@@ -16,15 +18,33 @@ var angularInit = (function(){
 			$stateProvider
 				.state('home', {
 					url: '/home',
-					templateUrl: 'views/home.html'
+					templateUrl: 'views/home.html',
+					controller: 'HomeController',
+					controllerAs: 'home'
+
 				})
 				.state('comms', {
 					url: '/comms',
-					templateUrl: 'views/comms.html'
+					templateUrl: 'views/comms.html',
+					controller: 'CommController',
+					controllerAs: 'comms',
+					resolve:{
+						commApiResult: function(ContentApis){
+							return ContentApis.getEntry();
+						}
+					}
+				})
+				.state('charts',{
+					url:'/charts',
+					templateUrl:'views/charts.html',
+					controller:'ChartsController',
+					controllerAs:'scharts'
 				})
 				.state('formz', {
 					url: '/formz',
-					templateUrl: 'views/formz.html'
+					templateUrl: 'views/formz.html',
+					controller: 'BlogController',
+					controllerAs: 'formz',
 				})
 				.state('kmaps', {
 					url: '/kmaps',
@@ -34,6 +54,8 @@ var angularInit = (function(){
 					url: '/kmapquery',
 					templateUrl: 'views/kmapquery.html'
 				})
+
+		}).run(function(ContentApis, UserAuthService){
 
 		});
 

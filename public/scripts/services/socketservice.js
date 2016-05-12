@@ -1,11 +1,12 @@
 /**
  * Created by kellysmith on 2/22/16.
  *
- * 2014 pokingBears.com
+ * 2016 pokingBears.com
  */
 'use strict';
-var ChatSocket =  function (socketFactory) {
-	console.log(' is there a socket factory avail ');
+
+function ChatSocket(socketFactory) {
+	console.log(' is there a socket factory avail '+socketFactory);
 	var socket = socketFactory();
 	socket.forward('broadcast');
 	return socket;

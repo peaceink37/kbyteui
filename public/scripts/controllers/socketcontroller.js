@@ -15,8 +15,21 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 	_this.infoData.nickName = 'Kelly';
 	_this.infoData.roomName = 'TheLounge'
 	_this.infoData.messageLog = 'Ready to chat!';
-	_this.infoData.joinActive = false;
-	_this.infoData.creativeActive = false;
+
+
+	_this.chatBtnStates = {
+		joinActive:false,
+		creativeActive:false,
+		activeRooms:false,
+		changeName:false,
+		messaging:true
+	}
+
+	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+	console.log(' navigator user media '+navigator.getUserMedia);
+
+	ChatSocket.emit('join', _this.infoData.nickName);
 
 	_this.sendMessage = function () {
 		var match = _this.infoData.message.match('^\/namechange (.*)');
@@ -40,13 +53,13 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 		_this.infoData.message = '';
 	};
 
-	_this.createRoom = function (roomname) {
-
-		ChatSocket.emit('createRoom', roomname);
+	_this.createRoom = function () {
+		$log.debug(' create room ', _this.infoData.roomName);
+		ChatSocket.emit('createRoom', _this.infoData.roomName);
 	};
 
 	_this.joinRoom = function (roomname) {
-
+		$log.debug(' join room ', roomname);
 		ChatSocket.emit('joinRoom', roomname);
 	};
 

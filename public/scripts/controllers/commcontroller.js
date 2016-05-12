@@ -6,15 +6,13 @@
 
 
 /* @ngInject */
-function CommController($rootScope, $state, ContentApis) {
+function CommController($rootScope, $state, commApiResult) {
 
 	var _this = this;
 
 	_this.stringOut = '';
 
-	var commApis = ContentApis;
-
-	_this.commApiResult = commApis.getEntry();
+	_this.commApiResult = commApiResult;
 
 	if(_this.commApiResult.message.indexOf('message') != -1){
 		_this.commApiResult = 'The Aqua Teens Love You';

@@ -35,7 +35,10 @@ function BlogController($state, $q, $sce, ContentApis) {
 
 		var entryMessage = "";
 
+		$(".content-entry").append('<div class="elementdate">'+Date.now()+'</div>');
+
 		_this.formInfo.comments = $(".content-entry").html();
+
 
 		UserInfo.setEntry(_this.formInfo)
 

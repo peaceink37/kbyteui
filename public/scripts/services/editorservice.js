@@ -21,6 +21,10 @@ function EditorService ($rootScope){
 
 	}
 
+	this.setElement = function(){
+
+	}
+
 
 }
 

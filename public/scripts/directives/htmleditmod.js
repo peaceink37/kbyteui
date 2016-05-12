@@ -1,10 +1,10 @@
 /**
  * Created by kellysmith on 10/27/15.
  *
- * 2014 pokingBears.com
+ * 2016 pokingBears.com
  */
 
-	function HtmlEdit(){
+	function htmlEdit(){
 
 		return {
 
@@ -14,18 +14,13 @@
 			link: function(scope, element, attrs, ngModel){
 
 				on(focus)
-
-
-
-
-
 			}
 		}
 
 	}
 
 	angular.module('kbyteApp')
-		.directive('HtmlEdit', HtmlEdit);
+		.directive('htmlEdit', htmlEdit);
 
 
-module.exports.htmledit = htmledit;
+module.exports.htmlEdit = htmlEdit;

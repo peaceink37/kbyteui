@@ -4,26 +4,29 @@
  * 2016 pokingBears.com
  */
 
-function UserAuthService(){
+function UserAuthService($window){
 
 	userAuth = {};
-	var token;
-	var authObject = {};
+	userAuth.token = 'token';
+	userAuth.uautho = 'uautho';
 
 	userAuth.setToken = function(tkn){
-		 token = tkn;
+		$window.localStorage.setItem('token', tkn);
 	};
 
 	userAuth.getToken = function(){
-		return token;
+		var tk = $window.localStorage.getItem('token');
+		return tk;
 	};
 
-	userAuth.setAuthObject = function(authObj){
-		 authObject = authObj;
+	userAuth.setAuthObject = function(authObj) {
+		$window.localStorage.setItem('uautho', JSON.stringify(authObj));
 	};
 
 	userAuth.getAuthObject = function(){
-
+		var authObject = $window.localStorage.getItem('uautho');
+		JSON.parse(authObject);
+	    return authObject;
 	};
 
 	return userAuth;
