@@ -1,7 +1,7 @@
 // chaining instead or var; give app name then app dependencies inside array brackets
 
 
-var angularInit = (function(){
+function angularInit(){
 
 	angular.module('kbyteApp', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'geolocation', 'btford.socket-io'])
 	.value('nickName', 'kelly');
@@ -59,8 +59,8 @@ var angularInit = (function(){
 
 		});
 
-})();
-
+};
+angularInit();
 
 module.exports = angularInit;
 

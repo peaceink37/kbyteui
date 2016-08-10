@@ -20,9 +20,10 @@ function ContentApis ($q, $http, UserAuthService){
     apiService.apiRoot = "";
 
 	if(isDevelopmentMode() === true){
-		apiService.apiRoot = "http://192.168.0.6:3000/";
+		//apiService.apiRoot = 'http://192.168.0.5:3000/';
+		apiService.apiRoot = 'http://localhost:3000/';
 	} else {
-		apiService.apiRoot = "http://kbytedesign.com/";
+		apiService.apiRoot = 'http://kbytedesign.com/';
 	}
 
 	apiService.getLog = function(callback){

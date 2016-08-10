@@ -3,7 +3,8 @@
     <div class='container'>
         <div class='row'>
             <form>
-                <section class='col-md-6 col-xs-12' style='margin-top:2px;'>
+                <div class='col-md-3 col-xs-0'></div>
+                <section class='col-md-6 col-xs-12' style='margin-top:2px; margin-left:auto; margin-right:auto'>
 
                     <div ng-controller='SocketController as socketc'>
                         <h3>Socket Visuals - {{socketc.infoData.messageLog}}</h3>
@@ -18,6 +19,9 @@
                         </div>
                         <div class='row'>
                             <div class='socket-input'>
+                                <video id='video_chat' controls='true'>
+                                                                        
+                                </video>
                                 <form role='form' novalidate name='form'>
                                     <div class='form-group' style='margin-top:10px;'>
                                         <input ng-if='socketc.chatBtnStates.messaging' type='text'
@@ -37,6 +41,7 @@
                                                 btn-checkbox>Change Display Name</button>
                                         <button class='btn btn-sm btn-primary' ng-model='socketc.chatBtnStates.activeRooms' 
                                                 btn-checkbox>Active Rooms</button>
+                                        <button class='btn btn-sm btn-primary' ng-click='socketc.endSession()'>End Session</button>
                                     </div>
                                     <div>
 
@@ -69,12 +74,14 @@
                         </div>
                     </div>
                 </section>
+                <div class='col-md-3 col-xs-0'></div>
             </form>
-
+            <!--
             <section class='col-xs-12 col-md-6'>
                 <h3>{{comms.stringOut}}</h3>
                 <h5>{{comms.commApiResult}}</h5>
             </section>
+            
             <section class='col-xs-12 col-md-6'>
                 <video controls='true'>
                     <source src='../images/aquateen213.webm' type='video/webm'>
@@ -84,6 +91,8 @@
                     or march yourself into the sea.
                 </video>
             </section>
+            -->
         </div>
     </div>
 </div>
+

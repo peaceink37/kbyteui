@@ -1,7 +1,7 @@
 /**
  * Created by kellysmith on 3/9/16.
  *
- * 2014 pokingBears.com
+ * 2016 pokingBears.com
  */
 'use strict'
 
@@ -25,11 +25,63 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 		messaging:true
 	}
 
+	// create the get media method based on browser
 	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-	console.log(' navigator user media '+navigator.getUserMedia);
+	console.log(' navigator user media ');
 
 	ChatSocket.emit('join', _this.infoData.nickName);
+
+	var video = document.querySelector('#video_chat');
+	var vidObj = {video:true, audio:true};
+	var videoStream;
+	var vFormat = "";
+
+	function successCallback(vidStream){
+
+		window.stream = videoStream = vidStream;
+
+		console.log(" window user agent "+navigator.userAgent);
+
+		var userAgent = navigator.userAgent;
+		
+    	video.src = window.URL.createObjectURL(videoStream);
+        
+        if (userAgent.indexOf('Mozilla') !== -1){
+        	vFormat = 'webm';	
+        } else {
+    		vFormat = 'mp4';
+        }
+            	
+    	
+		video.play();
+		video.volume = 0.4;
+	}
+
+	function errorCallback(error){
+
+		console.log(" get video media error ", error);
+
+	}
+
+	navigator.getUserMedia(vidObj, successCallback, errorCallback);
+
+	_this.endSession = function() {
+
+		
+		var vidTrack = videoStream.getTracks()[0];
+		var audioTrack = videoStream.getTracks()[1]
+
+		console.log('  hey oh .. can we stop the media ?');
+
+		vidTrack.stop();
+		audioTrack.stop();
+
+		video.src = '../images/aquateen213.'+vFormat;
+
+		
+	};
+
 
 	_this.sendMessage = function () {
 		var match = _this.infoData.message.match('^\/namechange (.*)');

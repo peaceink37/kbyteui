@@ -194,7 +194,7 @@ describe(' do an range and sum / reduce operation ', function(){
 
 			reduced = reduced + (i+1);
 
-			//console.log(' filled range '+filledRange+'  reduced '+reduced+' mod i  '+(i%2));
+			console.log(' filled range '+filledRange+'  reduced '+reduced+' mod i  '+(i%2));
 		}
 
 	})
@@ -266,11 +266,11 @@ describe(' call methods to change scope ', function(){
 
 describe(' apply method to change scope w argument array ', function(){
 
-	var thingy1 = {name:'bubba', age:'50', home:'Flint'};
+	var thingy1 = {name:'scat', age:'55', home:'Flint'};
 
 	it('should shift scope to applying object',function(){
 
-		var args = ['derwood', '14', 'Paris'];
+		var args = ['derwood', '14', 'Berlin'];
 
 		function update(name, age, size){
 			this.name = name;
@@ -280,7 +280,7 @@ describe(' apply method to change scope w argument array ', function(){
 
 	   	update.apply(thingy1, args);
 
-		console.log('  thingy1  '+thingy1.name);
+		console.log('  thingy1  '+thingy1.name+'   '+thingy1.home);
 	});
 
 });
@@ -307,7 +307,8 @@ describe(' use spread operator to flatten array args ', function(){
 		}
 
 		var list1 = sliceArgList(2,4,6);
-		console.log(' list1 '+list1.length);
+		
+		console.log(' list1 '+list1.length+' type of list ',typeof list1);
 
 		flatNums(aNumbers);
 	});
@@ -420,10 +421,196 @@ describe(' nested function returns ', function(){
 			       //return foo(foo(foo(x)));
 		       }
 
-		   console.log(' complicated nested function  ',complicated(3))
+		   console.log(' complicated nested function  '+complicated(3))
 	   })
 
 });
+
+describe(' reduce an array ', function(){
+
+	var array1 = [2,5,8,11,22];
+	var aResult;
+
+	it(' returns reduced value from left to right - prev + curr ', function(){
+
+		function reduceThat(prev, next, idx){
+
+			aResult = prev+next;
+			return aResult;
+
+		}
+
+		var reduceThisAr = array1.reduce(reduceThat);
+
+		console.log(' classic reduce value reduceThisAr '+reduceThisAr);
+	})
+
+})
+
+
+describe(' map object values / or keys into an array ', function(){
+
+	var uidNameObj = [{uid:1, name:'John McLain'},{uid:2, name:'Fred Savage'},{uid:3, name:'Gus Fring'}]
+
+	it(' returns an array of name values from the object ', function(){
+
+		function mapMethod(obj){
+
+			var returnObj = {};
+			returnObj[obj.uid] = obj.name;
+			return returnObj;
+		}
+
+		var nameList = uidNameObj.map(mapMethod);
+
+		console.log(' object map name list ',nameList[2]);
+
+		for(foo in nameList){
+			value = nameList[foo];
+			console.log(' foo in namelist ',value[foo]);
+		}
+
+	})
+
+})
+
+describe(' functional javascript tutes ', function(){
+
+	it(' takes an string input and makes it all upper case ',function(){
+
+		var inputString = 'This is estranga';
+
+		function upperCaseMaker(input){
+
+			return input.toUpperCase();
+		}
+
+		var upperString = upperCaseMaker(inputString);
+		console.log(' uppercase '+upperString);
+	})
+
+	it(' creates a map instead of a loop ',function(){
+
+		var aNumbers = [2,4,6,3,7,4,2,8,2,7,7,1,2,8,2,7]
+
+		var mapNums = aNumbers.map(function(num){
+
+			var newNum = num*2;
+
+			return newNum;
+
+
+		}).sort(function(a,b){
+			// if true, return == -1 is large to small and return == 1 is small to large
+			if(a > b){
+				return -1;
+			} else {
+				return 1;
+			}
+		})
+		console.log(' map numberes '+mapNums);
+
+	})
+
+	it(' this excersize ', function(){
+		// this is always set by the calling method slash function
+
+
+		function containerTray(){
+
+			this.stu = 0;
+
+			return function inside(){
+
+				this.stu = 12;
+				return this.stu;
+			}
+
+			//containerTrayTwo.call(this, 6)
+
+			
+
+		}
+
+		function containerTrayTwo(val){
+
+			this.stu = val;
+		}	
+		
+		var stuVal = containerTray();
+		console.log(' value of Stu '+stuVal);
+
+
+
+	})
+
+	it(' combining array into one data object ',function(){
+
+		var cities1 = ['Dubai', 'San Francisco', 'Detroit', 'Boston'];
+		var cityStats = [{'loc':'26.0', 'temp':'101'},{'loc':'39.5', 'temp':'66'},{'loc':'44.5','temp':'41'},{'loc':'41.0','temp':'28'}]
+		var i = 0;
+		var newStats = cityStats.map(function(obj){
+
+			var newObj = {};
+			newObj.loc = obj.loc;
+			console.log(" object loc "+obj.loc);
+			newObj.temp = obj.temp;
+			newObj['city'] = cities1[i];
+			i++;
+			return newObj;
+			
+		})
+
+		// remove exclusions from intSet then sort
+		var intSet = [8,2,3,11,5,6,7,1,9,10,4,12,13];
+		var exclusionSet = [4,12,7];
+
+		var newInts = intSet.filter(function(val){
+
+				if(exclusionSet.indexOf(val) === -1){
+					return val
+				}
+		}).sort(function(a,b){
+
+			if(a > b){
+				return 1;
+			} else {
+				return -1;
+			}
+		})
+
+		console.log(' new stats '+newStats[0].city+'  '+cityStats+'  new ints  '+newInts);
+
+	})
+
+	it(' concats a few strings ', function(){
+
+		var str1 = 'smoke rocks \n all day long';
+		var str2 = 'and the smoke will move you \n head first into the sun';
+		var str3 = 'ain\'t no rock \n like the Flintstone rock';
+
+		var longStringArr = str1.concat(str2,str3).split('\n');
+		var longString = longStringArr.join('\n');
+
+		var firstWord = longString.substr(0,5);
+
+		console.log(' concat string '+longString+'  '+firstWord);
+
+		var strArr = [str1, str2, str3];
+
+		function myStringBreaker (a, b, c){
+
+			var args = Array.prototype.slice.call(arguments, 2);
+			console.log(' a b c '+a+' '+b+'  '+c+'  and arguments object ',args);
+
+		}
+
+		myStringBreaker(...strArr);
+
+	})
+
+});
+
 
 
 

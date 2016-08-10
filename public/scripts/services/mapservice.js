@@ -61,7 +61,7 @@ function MapService($q, $rootScope, ContentApis){
 	// Private Inner Functions
 	// --------------------------------------------------------------
 	// Convert a JSON of users into map points
-	var convertToMapPoints = function(response){
+	function convertToMapPoints(response){
 
 		// Clear the locations holder
 		var locations = [];
@@ -96,7 +96,7 @@ function MapService($q, $rootScope, ContentApis){
 	};
 
 	// Initializes the map
-	var initialize = function(latitude, longitude, filter) {
+	function initialize(latitude, longitude, filter) {
 
 		// Uses the selected lat, long as starting point
 		var myLatLng = {lat: selectedLat, lng: selectedLong};
