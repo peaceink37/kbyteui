@@ -15,6 +15,14 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 	_this.infoData.nickName = 'Kelly';
 	_this.infoData.roomName = 'TheLounge'
 	_this.infoData.messageLog = 'Ready to chat!';
+	_this.videoSession = false;
+	_this.videoSessionState = 'Start Session';
+
+	var video = document.querySelector('#video_chat');
+	var vidObj = {video:true, audio:true};
+	var videoStream;
+	var vFormat = "";
+
 
 
 	_this.chatBtnStates = {
@@ -25,48 +33,62 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 		messaging:true
 	}
 
-	// create the get media method based on browser
-	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+	_this.videoSessionToggle = function(){
 
-	console.log(' navigator user media ');
-
-	ChatSocket.emit('join', _this.infoData.nickName);
-
-	var video = document.querySelector('#video_chat');
-	var vidObj = {video:true, audio:true};
-	var videoStream;
-	var vFormat = "";
-
-	function successCallback(vidStream){
-
-		window.stream = videoStream = vidStream;
-
-		console.log(" window user agent "+navigator.userAgent);
-
-		var userAgent = navigator.userAgent;
-		
-    	video.src = window.URL.createObjectURL(videoStream);
-        
-        if (userAgent.indexOf('Mozilla') !== -1){
-        	vFormat = 'webm';	
-        } else {
-    		vFormat = 'mp4';
-        }
-            	
-    	
-		video.play();
-		video.volume = 0.4;
-	}
-
-	function errorCallback(error){
-
-		console.log(" get video media error ", error);
+		if(!_this.videoSession){
+			startSession();
+		} else {
+			endSession();
+		}
 
 	}
 
-	navigator.getUserMedia(vidObj, successCallback, errorCallback);
+	function startSession(){
 
-	_this.endSession = function() {
+		// create the get media method based on browser
+		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+		_this.videoSessionState = 'End Session';
+
+		console.log(' navigator user media '+_this.videoSessionState);
+
+		ChatSocket.emit('join', _this.infoData.nickName);
+
+		function successCallback(vidStream){
+
+			window.stream = videoStream = vidStream;
+
+			console.log(" window user agent "+navigator.userAgent);
+
+			var userAgent = navigator.userAgent;
+			
+	    	video.src = window.URL.createObjectURL(videoStream);
+	        
+	        if (userAgent.indexOf('Mozilla') !== -1){
+	        	vFormat = 'webm';	
+	        } else {
+	    		vFormat = 'mp4';
+	        }
+	            	
+	    	
+			video.play();
+			video.volume = 0.4;
+			_this.videoSession = true;
+			
+		}
+
+		function errorCallback(error){
+
+			console.log(" get video media error ", error);
+
+		}
+
+		navigator.getUserMedia(vidObj, successCallback, errorCallback);
+
+
+	};
+
+	function endSession() {
 
 		
 		var vidTrack = videoStream.getTracks()[0];
@@ -78,6 +100,8 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 		audioTrack.stop();
 
 		video.src = '../images/aquateen213.'+vFormat;
+		_this.videoSession = false;
+		_this.videoSessionState = 'Start Session';
 
 		
 	};

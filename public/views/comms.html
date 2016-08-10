@@ -41,7 +41,7 @@
                                                 btn-checkbox>Change Display Name</button>
                                         <button class='btn btn-sm btn-primary' ng-model='socketc.chatBtnStates.activeRooms' 
                                                 btn-checkbox>Active Rooms</button>
-                                        <button class='btn btn-sm btn-primary' ng-click='socketc.endSession()'>End Session</button>
+                                        <button class='btn btn-sm btn-primary' ng-click='socketc.videoSessionToggle()'>{{socketc.videoSessionState}}</button>
                                     </div>
                                     <div>
 
