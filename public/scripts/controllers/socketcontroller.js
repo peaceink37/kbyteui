@@ -24,7 +24,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 	var vFormat = "";
 
 
-	// chat session states
+	// We manage the chat session states
 	_this.chatBtnStates = {
 		joinActive:false,
 		creativeActive:false,
