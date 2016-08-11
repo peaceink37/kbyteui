@@ -24,7 +24,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 	var vFormat = "";
 
 
-
+	// chat session states
 	_this.chatBtnStates = {
 		joinActive:false,
 		creativeActive:false,
@@ -42,6 +42,38 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 		}
 
 	}
+
+	_this.sendMessage = function () {
+		var match = _this.infoData.message.match('^\/namechange (.*)');
+
+		if (angular.isDefined(match) &&
+			angular.isArray(match) && match.length === 2) {
+			var oldNick = _this.infoData.nickName;
+			console.log("  in the match pattern for nickname HI " + _this.infoData.nickName);
+			_this.infoData.nickName = match[1];
+			_this.infoData.message = ' ';
+			console.log("  in the match pattern for nickname LO " + _this.infoData.nickName);
+			_this.infoData.messageLog = messageFormatter(new Date(),
+				nickName, 'nickname changed - from ' +
+				oldNick + ' to ' + _this.infoData.nickName + '!') +
+			_this.infoData.messageLog;
+		}
+
+		$log.debug('sending message', _this.infoData.message);
+		ChatSocket.emit('message', _this.infoData.nickName, _this.infoData.message);
+		$log.debug('message sent', _this.infoData.message);
+		_this.infoData.message = '';
+	};
+
+	_this.createRoom = function () {
+		$log.debug(' create room ', _this.infoData.roomName);
+		ChatSocket.emit('createRoom', _this.infoData.roomName);
+	};
+
+	_this.joinRoom = function (roomname) {
+		$log.debug(' join room ', roomname);
+		ChatSocket.emit('joinRoom', roomname);
+	};
 
 	function startSession(){
 
@@ -104,39 +136,6 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 		_this.videoSessionState = 'Start Session';
 
 		
-	};
-
-
-	_this.sendMessage = function () {
-		var match = _this.infoData.message.match('^\/namechange (.*)');
-
-		if (angular.isDefined(match) &&
-			angular.isArray(match) && match.length === 2) {
-			var oldNick = _this.infoData.nickName;
-			console.log("  in the match pattern for nickname HI " + _this.infoData.nickName);
-			_this.infoData.nickName = match[1];
-			_this.infoData.message = ' ';
-			console.log("  in the match pattern for nickname LO " + _this.infoData.nickName);
-			_this.infoData.messageLog = messageFormatter(new Date(),
-				nickName, 'nickname changed - from ' +
-				oldNick + ' to ' + _this.infoData.nickName + '!') +
-			_this.infoData.messageLog;
-		}
-
-		$log.debug('sending message', _this.infoData.message);
-		ChatSocket.emit('message', _this.infoData.nickName, _this.infoData.message);
-		$log.debug('message sent', _this.infoData.message);
-		_this.infoData.message = '';
-	};
-
-	_this.createRoom = function () {
-		$log.debug(' create room ', _this.infoData.roomName);
-		ChatSocket.emit('createRoom', _this.infoData.roomName);
-	};
-
-	_this.joinRoom = function (roomname) {
-		$log.debug(' join room ', roomname);
-		ChatSocket.emit('joinRoom', roomname);
 	};
 
 	$scope.$on('socket:broadcast', function (event, data) {
