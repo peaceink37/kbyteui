@@ -18,7 +18,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 	_this.videoSession = false;
 	_this.videoSessionState = 'Start Session';
 
-	var video = document.querySelector('#video_chat');
+	var video = document.querySelector('#video-chat');
 	var vidObj = {video:true, audio:true};
 	var videoStream;
 	var vFormat = "";
@@ -75,6 +75,8 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 		ChatSocket.emit('joinRoom', roomname);
 	};
 
+	drawCanvas();
+
 	function startSession(){
 
 		// create the get media method based on browser
@@ -82,7 +84,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 
 		_this.videoSessionState = 'End Session';
 
-		console.log(' navigator user media '+_this.videoSessionState);
+		console.log(' navigator user media '+_this.videoSessionState+' dom vid obj '+video);
 
 		ChatSocket.emit('join', _this.infoData.nickName);
 
@@ -102,7 +104,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 	    		vFormat = 'mp4';
 	        }
 	            	
-	    	
+	    	ChatSocket.emit('vidplay', videoStream);
 			video.play();
 			video.volume = 0.4;
 			_this.videoSession = true;
@@ -130,6 +132,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 
 		vidTrack.stop();
 		audioTrack.stop();
+		ChatSocket.emit('vidstop', videoStream);
 
 		video.src = '../images/aquateen213.'+vFormat;
 		_this.videoSession = false;
@@ -137,6 +140,32 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 
 		
 	};
+
+	// This will need to be a directive
+	function drawCanvas(){
+
+		var canvas = document.getElementsByClassName('video-playpause');
+		for(var foo in canvas){
+			console.log('  canvas '+canvas[foo]);
+		}
+		var ctx = canvas[0].getContext('2d');
+
+
+		ctx.beginPath();
+        ctx.arc(27, 28, 24, 0, 2*Math.PI);
+        ctx.lineWidth = 6;
+		ctx.strokeStyle = '#eeeded';
+		//ctx.strokeRect(50,50,50,50);
+		ctx.stroke();
+
+		ctx.beginPath();
+        ctx.arc(27, 28, 21, 0, 2*Math.PI);
+        ctx.lineWidth = 4;
+		ctx.strokeStyle = '#aabdbd';
+		//ctx.strokeRect(50,50,50,50);
+		ctx.stroke();
+
+	}
 
 	$scope.$on('socket:broadcast', function (event, data) {
 		$log.debug('got a message', event.name);

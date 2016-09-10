@@ -1,5 +1,5 @@
 /**
- * Created by kellysmith on 4/1/16.
+ *  Created by kellysmith on 4/1/16.
  *
  * 2016 pokingBears.com
  */
@@ -20,12 +20,16 @@ function UserAuthService($window){
 	};
 
 	userAuth.setAuthObject = function(authObj) {
-		$window.localStorage.setItem('uautho', JSON.stringify(authObj));
+		var authString = JSON.stringify(authObj);
+		console.log(' auth string '+authObject+'    '+typeof authObject)
+		$window.localStorage.setItem('uautho', authString);
 	};
 
 	userAuth.getAuthObject = function(){
-		var authObject = $window.localStorage.getItem('uautho');
-		JSON.parse(authObject);
+
+		var authString = $window.localStorage.getItem('uautho');
+		var authObject = JSON.parse(authString);
+	    console.log(' ping get auth object '+ typeof authObject.displayname);
 	    return authObject;
 	};
 

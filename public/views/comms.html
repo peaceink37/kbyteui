@@ -19,9 +19,14 @@
                         </div>
                         <div class='row'>
                             <div class='socket-input'>
-                                <video id='video_chat' controls='true'>
-                                                                        
-                                </video>
+                                <div class='video-container'>
+                                    <video id='video-chat' controls='true'>                                           
+                                    </video>
+                                    <canvas id='socket-video-btn' class='video-playpause' width='60' height='60'
+                                        ng-click='socketc.videoSessionToggle()'>
+                                        
+                                    </canvas>
+                                </div>
                                 <form role='form' novalidate name='form'>
                                     <div class='form-group' style='margin-top:10px;'>
                                         <input ng-if='socketc.chatBtnStates.messaging' type='text'

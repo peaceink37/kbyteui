@@ -5,7 +5,7 @@
  */
 'use strict'
 
-function BlogController($state, $q, $sce, ContentApis) {
+function BlogController($state, $q, $sce, ContentApis, ChatSocket, UserAuthService) {
 
 	var UserInfo = ContentApis;
 	var _this = this;
@@ -21,6 +21,11 @@ function BlogController($state, $q, $sce, ContentApis) {
 	_this.formInfo.userComments = [];
 	_this.formInfo.userName = "Kelly";
 
+
+	ChatSocket.on('content-update', function(){
+
+		console.log(' new entry detected ');
+	})
 
 	_this.submitUserEntry = function () {
 
@@ -58,19 +63,15 @@ function BlogController($state, $q, $sce, ContentApis) {
 
 	}
 
-	function setEntryMessage(msg) {
-
-		_this.setEntryMessage = msg;
-
-	};
-
-	function setComments(com) {
-		console.log(" retrieve com  " + com);
-		_this.userComments = com;
+	
+	_this.retreiveUserEntries = function () {
+		checkAuthToken();
 	}
 
-	_this.retreiveUserEntries = function () {
-		UserInfo.retrieveEntries()
+	
+	function retrieveUserEntries(){	
+		console.log(' zero in the arguments object '+arguments[0].displayname);
+		UserInfo.retrieveEntries(arguments[0])
 			.then(function (data) {
 				angular.forEach(data, function (v, k) {
 					//console.log(" retrieve com  " + data[k].uid + "  " + data[k]+"  "+v);
@@ -83,7 +84,9 @@ function BlogController($state, $q, $sce, ContentApis) {
 						textToHtml = err.message;
 					}
 
+					
 					userAndComment.comment = textToHtml;
+					userAndComment.author = data[k].author;
 					//console.log(" textToHTML var " + textToHtml);
 					_this.formInfo.userComments.push(userAndComment);
 
@@ -91,10 +94,29 @@ function BlogController($state, $q, $sce, ContentApis) {
 				// put all the comments into an array and then join them up
 
 			})
+	};
+
+	function setEntryMessage(msg) {
+
+		_this.setEntryMessage = msg;
 
 	};
 
-	_this.retreiveUserEntries();
+	function setComments(com) {
+		console.log(" retrieve com  " + com);
+		_this.userComments = com;
+	}
+
+	function checkAuthToken() {
+
+		var authObj = UserAuthService.getAuthObject();
+		_this.formInfo.userName = authObj.displayname;
+		console.log(" new display name "+authObj.displayname);
+		retrieveUserEntries(authObj);
+
+	}
+
+	checkAuthToken();
 };
 
 angular.module('kbyteApp')

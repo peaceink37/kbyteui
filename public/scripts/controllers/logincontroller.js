@@ -1,5 +1,5 @@
 /**
- * Created by kellysmith on 3/26/16.
+ *  Created by kellysmith on 3/26/16.
  *
  * 2016 pokingBears.com
  */
@@ -17,6 +17,7 @@ function LoginController(ContentApis, ModalScopeService, UserAuthService, $timeo
 	_this.userInfo.displayname;
 	_this.userInfo.userpass;
 	_this.error = null;
+	_this.modalPassUpdate = false;
 	_this.processing = false;
 	_this.postProcessing = {};
 	_this.postProcessing.status;
@@ -28,18 +29,37 @@ function LoginController(ContentApis, ModalScopeService, UserAuthService, $timeo
 
 		console.log(" proceed be called "+_this.userInfo.displayname+"  pwd  "+_this.userInfo.userpass);
 		_this.processing = true;
-	    if(_this.userInfo.userpass.length < 6){
-		    console.log(" pwd length ",_this.userInfo.userpass.length)
-		    return;
-	    }
 
-		userPassService.userAuth(_this.userInfo, processResults);
+	    if(_this.modalPassUpdate === true){
+	    	
+	    	var passInfo = userPassService.passReset(_this.userInfo);
+	    	console.log(" pass info from user pass service "+passInfo+"     "+_this.userInfo.email);
+	    	_this.modalPassUpdate = false;
+	    } else {
+
+	    	if(_this.userInfo.userpass.length < 6){
+		    	console.log(" pwd length ",_this.userInfo.userpass.length)
+		    	return;
+	    	} else {
+	    		userPassService.userAuth(_this.userInfo, processResults);	
+	    	}
+	    		
+	    }	
+		
 
 	};
 
 	_this.cancel = function() {
+		_this.modalPassUpdate = false;
 		console.log("  cancel called ");
 		parentModalScope.cancel();
+	}
+
+	_this.passupdate = function(){
+
+		console.log(" called this thing to update password ");
+
+		_this.modalPassUpdate = true;
 	}
 
 	function processResults(resMessage){

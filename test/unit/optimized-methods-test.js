@@ -559,53 +559,58 @@ describe(' functional javascript tutes ', function(){
 			i++;
 			return newObj;
 			
-		})
+		}).filter(function(obj){
+
+			if(obj.city !== 'Detroit'){
+				return obj;
+			}
+
+		});
 
 		// remove exclusions from intSet then sort
 		var intSet = [8,2,3,11,5,6,7,1,9,10,4,12,13];
-		var exclusionSet = [4,12,7];
+		var exclusionSet = [8,2,7];
 
-		var newInts = intSet.filter(function(val){
+		var newInts = intSet.filter(function(num){
 
-				if(exclusionSet.indexOf(val) === -1){
-					return val
-				}
+			if(exclusionSet.indexOf(num) === -1){
+				return num;	
+			}
+
+			
 		}).sort(function(a,b){
 
-			if(a > b){
-				return 1;
-			} else {
+			if(a < b){
 				return -1;
+			} else {
+				return 1;
 			}
 		})
-
-		console.log(' new stats '+newStats[0].city+'  '+cityStats+'  new ints  '+newInts);
+		console.log(' new stats '+newStats[0].city+' new stats object '+newStats+'  '+cityStats+'  new ints  '+newInts);
 
 	})
 
 	it(' concats a few strings ', function(){
 
-		var str1 = 'smoke rocks \n all day long';
-		var str2 = 'and the smoke will move you \n head first into the sun';
-		var str3 = 'ain\'t no rock \n like the Flintstone rock';
+		var str1 = 'Grendal has mother issues\n But don\'t we all\n';
+		var str2 = 'The Compsons were on fugged up Southern family \n but not quite as bad as the Mansons \n';
+		var strArray = [str1,str2];
+		var bookObj = {set1:[{'book':'The Sound And The Fury', 'id':1},{'book':'Beowulf','id':2}], set2:[{}]};
+		
+		console.log('  bookObj  '+bookObj['set1'][0]['book']);
 
-		var longStringArr = str1.concat(str2,str3).split('\n');
-		var longString = longStringArr.join('\n');
+		newBookObj = bookObj.set1.map(function(obj){
 
-		var firstWord = longString.substr(0,5);
+			var nObj = {}
+			nObj.id = obj.id;
+			nObj.book = obj.book;
+			nObj.tag = strArray[obj.id-1];
 
-		console.log(' concat string '+longString+'  '+firstWord);
+			return nObj;
 
-		var strArr = [str1, str2, str3];
+		})
 
-		function myStringBreaker (a, b, c){
-
-			var args = Array.prototype.slice.call(arguments, 2);
-			console.log(' a b c '+a+' '+b+'  '+c+'  and arguments object ',args);
-
-		}
-
-		myStringBreaker(...strArr);
+		console.log(' new book object '+newBookObj[0].tag);
 
 	})
 

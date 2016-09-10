@@ -70,6 +70,27 @@ function ContentApis ($q, $http, UserAuthService){
 
 	}
 
+	apiService.passReset = function(userEmail){
+
+		return $http({
+			method:'POST',
+			url:apiService.apiRoot+'api/resetpass',
+			data:JSON.stringify(userEmail),
+			headers:{
+				'Content-Type':'application/json; charset=utf-8'
+			}
+		}).then(
+			function(response){
+
+				console.log(" Email was appearently sent ");
+
+			},function(httpError){
+				throw httpError.status+" : "+httpError.data;
+			}
+		)
+
+	}
+
 	apiService.getEntry = function(){
 
 		console.log(" get entry called from resolve ");

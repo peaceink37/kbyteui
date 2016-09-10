@@ -8,7 +8,7 @@
                     <div>
                         <label> Current User: {{formz.formInfo.userName}}</label>
                         <!--
-                        <input class="input-md" type="text" ng-model="formz.userIdChange">
+                        <input class="input-md" type="text" ng-model="formz.userIdChange" >
                         <input ng-model="formz.formInfo.userName" type="text">
                         -->
 
@@ -33,9 +33,13 @@
 
             </section>
             <section class="col-xs-12 col-md-6">
+                <div>
+                    <button class='btn btn-sm btn-primary' ng-model='socketc.chatBtnStates.createActive' 
+                            btn-checkbox>Load By User</button>
+                </div>
                 <ul class="user-entries">
                      <li ng-repeat="entry in formz.formInfo.userComments track by $index">
-                         <h4>{{entry.user}}</h4>
+                         <h4>{{entry.author}}</h4>
                          <div ng-bind-html="entry.comment"></div>
                      </li>
                 </ul>

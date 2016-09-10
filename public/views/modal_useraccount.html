@@ -1,9 +1,9 @@
 <div ng-controller="LoginController as loginc">
 <div class="modal-header">
-    <h3 class="modal-title">{{loginc.username}}: {{loginc.logpass}}</h3>
+    <h3 class="modal-title">{{loginc.username}}</h3>
 </div>
 <div class="modal-body row">
-    <form name="passUpdate">
+    <form name="signIn" ng-show="!loginc.modalPassUpdate">
         <div class="kb-user-name col-md-12 col-xs-12">
             <h5>Email</h5>
             <input input-focus class="modal-signin" type="text" name="email" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
@@ -19,6 +19,7 @@
             <div>
                 <span class="kb-alert kb-alert-danger" ng-show="passError">{{loginc.passError}}</span>
                 <span class="kb-alert kb-alert-danger" ng-show="passUpdate.userpassword.$error.minlength">Password Must Be 6 Characters In Length</span>
+                <span ng-click="loginc.passupdate()"> Change Password </span>
             </div>
         </div>
         <div class="kb-user-name col-md-12 col-xs-12">
@@ -26,6 +27,13 @@
             <input input-focus class="modal-signin" type="text" name="displayname" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
                    ng-model="loginc.userInfo.displayname" placeholder="&nbsp;&nbsp;Display Name">
         </div>
+    </form>
+    <form name="passUpdate" ng-show="loginc.modalPassUpdate">
+        <h5>Please Enter You Email Address</h5>
+        <span>A Link for you to update your password will be sent there</span>
+        <input input-focus class="modal-signin" type="text" name="email" pattern=".{8,}" ng-minlength="8" ng-maxlength="64"
+                   ng-model="loginc.userInfo.email" placeholder="&nbsp;&nbsp;name@example.com">
+
     </form>
 </div>
 <div class="modal-footer">
