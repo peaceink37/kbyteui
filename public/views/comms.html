@@ -11,7 +11,25 @@
                         <h5>Current Display Name : {{socketc.infoData.nickName}}</h5>
                         <div class='row' style='margin-top:10px;'>
                             <div>
-                                <textarea class='text-background' style='width: 100%; height: 200px' ng-disable='true' ng-model='socketc.infoData.messageLog'></textarea>
+                                <div class='text-background chat-container chat-text' style='width: 100%;' ng-disable='true'>
+                                    <ul class='chat-window'>
+                                        <li ng-repeat='msg in socketc.infoData.messages'>{{msg}}</li>
+                                    </ul>
+                                </div>
+                                <div class='message-send'>
+                                <textarea class='chat-text' ng-if='socketc.chatBtnStates.messaging' 
+                                    type='text'
+                                    ng-max='100'
+                                    placeholder='Write A Message'
+                                    ng-model='socketc.infoData.message'
+                                    ng-focus='socketc.chatBtnStates.messaging'
+                                    style='width: 100%; margin-top:8px;'></textarea>
+                                    <canvas-button id='socket-send-btn' type='chatsend' active='inactive' class='video-playpause' width='60' height='60' ng-click='socketc.sendMessage(socketc.infoData.message)'>
+                                </canvas-button>
+                                </div>
+                                
+                                   
+                                <canvas-button id="butter-finger" active='inactive' type='chatsend'></canvas-button>
                             </div>
                         </div>
                         <div class='row'>
@@ -19,24 +37,11 @@
                         </div>
                         <div class='row'>
                             <div class='socket-input'>
-                                <div class='video-container'>
-                                    <video id='video-chat' controls='true'>                                           
-                                    </video>
-                                    <canvas id='socket-video-btn' class='video-playpause' width='60' height='60'
-                                        ng-click='socketc.videoSessionToggle()'>
-                                        
-                                    </canvas>
+                                <div>
+                                    <video-element></video-element>
                                 </div>
                                 <form role='form' novalidate name='form'>
-                                    <div class='form-group' style='margin-top:10px;'>
-                                        <input ng-if='socketc.chatBtnStates.messaging' type='text'
-                                               ng-max='100'
-                                               placeholder='Write A Message'
-                                               ng-model='socketc.infoData.message'
-                                               ng-focus='socketc.chatBtnStates.messaging'>
-                                        <button class='btn btn-sm btn-primary'
-                                                ng-click='socketc.sendMessage(socketc.infoData.message)'>Send!</button>
-                                    </div>
+                                    
                                     <div>
                                         <button class='btn btn-sm btn-primary' ng-model='socketc.chatBtnStates.createActive' 
                                                 btn-checkbox>Add Room</button>
@@ -46,7 +51,6 @@
                                                 btn-checkbox>Change Display Name</button>
                                         <button class='btn btn-sm btn-primary' ng-model='socketc.chatBtnStates.activeRooms' 
                                                 btn-checkbox>Active Rooms</button>
-                                        <button class='btn btn-sm btn-primary' ng-click='socketc.videoSessionToggle()'>{{socketc.videoSessionState}}</button>
                                     </div>
                                     <div>
 

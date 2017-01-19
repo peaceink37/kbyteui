@@ -6,23 +6,16 @@
 'use strict'
 
 /* @ng-inject */
-function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) {
+function SocketController($log, $scope, ChatSocket, EventFactory, UserAuthService, messageFormatter, nickName) {
 	var _this = this;
 
 	_this.infoData = {};
-	_this.messages = []
+	_this.infoData.messages = [];
 	_this.infoData.message = '';
 	_this.infoData.nickName = 'Kelly';
 	_this.infoData.roomName = 'TheLounge'
 	_this.infoData.messageLog = 'Ready to chat!';
-	_this.videoSession = false;
-	_this.videoSessionState = 'Start Session';
-
-	var video = document.querySelector('#video-chat');
-	var vidObj = {video:true, audio:true};
-	var videoStream;
-	var vFormat = "";
-
+	
 
 	// We manage the chat session states
 	_this.chatBtnStates = {
@@ -33,16 +26,7 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 		messaging:true
 	}
 
-	_this.videoSessionToggle = function(){
-
-		if(!_this.videoSession){
-			startSession();
-		} else {
-			endSession();
-		}
-
-	}
-
+	
 	_this.sendMessage = function () {
 		var match = _this.infoData.message.match('^\/namechange (.*)');
 
@@ -75,109 +59,30 @@ function SocketController($log, $scope, ChatSocket, messageFormatter, nickName) 
 		ChatSocket.emit('joinRoom', roomname);
 	};
 
-	drawCanvas();
-
-	function startSession(){
-
-		// create the get media method based on browser
-		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
-		_this.videoSessionState = 'End Session';
-
-		console.log(' navigator user media '+_this.videoSessionState+' dom vid obj '+video);
-
-		ChatSocket.emit('join', _this.infoData.nickName);
-
-		function successCallback(vidStream){
-
-			window.stream = videoStream = vidStream;
-
-			console.log(" window user agent "+navigator.userAgent);
-
-			var userAgent = navigator.userAgent;
-			
-	    	video.src = window.URL.createObjectURL(videoStream);
-	        
-	        if (userAgent.indexOf('Mozilla') !== -1){
-	        	vFormat = 'webm';	
-	        } else {
-	    		vFormat = 'mp4';
-	        }
-	            	
-	    	ChatSocket.emit('vidplay', videoStream);
-			video.play();
-			video.volume = 0.4;
-			_this.videoSession = true;
-			
-		}
-
-		function errorCallback(error){
-
-			console.log(" get video media error ", error);
-
-		}
-
-		navigator.getUserMedia(vidObj, successCallback, errorCallback);
-
-
-	};
-
-	function endSession() {
-
+	EventFactory.subscribe('userupdated',function(e, data){
+		console.log(" event subscribe fired for auth obj "+data.displayname);
+		var authObj = UserAuthService.getAuthObject();
+		_this.infoData.nickName = authObj.displayname;
 		
-		var vidTrack = videoStream.getTracks()[0];
-		var audioTrack = videoStream.getTracks()[1]
+	});
 
-		console.log('  hey oh .. can we stop the media ?');
+	
 
-		vidTrack.stop();
-		audioTrack.stop();
-		ChatSocket.emit('vidstop', videoStream);
-
-		video.src = '../images/aquateen213.'+vFormat;
-		_this.videoSession = false;
-		_this.videoSessionState = 'Start Session';
-
-		
-	};
-
-	// This will need to be a directive
-	function drawCanvas(){
-
-		var canvas = document.getElementsByClassName('video-playpause');
-		for(var foo in canvas){
-			console.log('  canvas '+canvas[foo]);
-		}
-		var ctx = canvas[0].getContext('2d');
-
-
-		ctx.beginPath();
-        ctx.arc(27, 28, 24, 0, 2*Math.PI);
-        ctx.lineWidth = 6;
-		ctx.strokeStyle = '#eeeded';
-		//ctx.strokeRect(50,50,50,50);
-		ctx.stroke();
-
-		ctx.beginPath();
-        ctx.arc(27, 28, 21, 0, 2*Math.PI);
-        ctx.lineWidth = 4;
-		ctx.strokeStyle = '#aabdbd';
-		//ctx.strokeRect(50,50,50,50);
-		ctx.stroke();
-
-	}
-
-	$scope.$on('socket:broadcast', function (event, data) {
-		$log.debug('got a message', event.name);
-		if (!data.payload) {
+	// message is contained within event object
+	ChatSocket.on('broadcast', function (event) {
+		$log.debug('got a message', event.source+'  '+event.payload);
+		$log.debug(' messages ', _this.infoData.messages);
+		if (!event.payload) {
 			$log.error('invalid message', 'event', event,
-				'data', JSON.stringify(data));
+				'data', JSON.stringify(event.payload));
 			return;
 		}
 		$scope.$apply(function () {
-			_this.infoData.messageLog = messageFormatter(
-				new Date(), data.source,
-				data.payload) + $scope.messageLog;
+			_this.infoData.messages.unshift(
+			messageFormatter(
+				new Date(), event.source,
+				event.payload)
+			);
 		});
 
 	});

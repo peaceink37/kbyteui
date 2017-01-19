@@ -1,5 +1,5 @@
 /**
- * Created by kellysmith on 3/17/16.
+ *  Created by kellysmith on 3/17/16.
  *
  * 2016 pokingBears.com
  */
@@ -113,3 +113,4 @@ angular.module('kbyteApp')
 
 module.exports = editorElement;
 module.exports = editorCanvas;
+

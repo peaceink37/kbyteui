@@ -6,31 +6,35 @@
 'use strict';
 
 /* @ngInject */
-function ContentApis ($q, $http, UserAuthService){
+function ContentApis ($q, $http, UserAuthService, UrlRootService, FormDataObject){
 
-	// Two development modes: 3000 indicates local node
-	// environment, while 8080 is local webserver using
-	// stubbed data
-	function isDevelopmentMode() {
-		return window.location.href.indexOf(':8080') > 0
-			|| window.location.href.indexOf(':3000') > 0;
-	}
-
+	
 	var apiService = {};
-    apiService.apiRoot = "";
+    apiService.apiRoot = UrlRootService.getUrlRoot();
+    console.log(' apiService.apiRoot  '+apiService.apiRoot);
 
-	if(isDevelopmentMode() === true){
-		//apiService.apiRoot = 'http://192.168.0.5:3000/';
-		apiService.apiRoot = 'http://localhost:3000/';
-	} else {
-		apiService.apiRoot = 'http://kbytedesign.com/';
-	}
+    apiService.getUIConfig = function(){
+
+    	return $http({
+    		method:'GET',
+    		url:apiService.apiRoot+'ui-visual.conf',
+    		headers:{
+    			'Content-Type':'application/json; charset=utf-8'
+    		}
+
+
+    	}).then(function(response){
+    		console.log(' ui response data '+response.data);
+    		return response.data;
+    	})
+
+    }
 
 	apiService.getLog = function(callback){
 
 		return $http({
 		    method:'GET',
-			url:apiService.apiRoot+'access.log',
+			url:apiService.apiRoot+'access2.log',
 			headers:{
 				'Content-Type':'text/plain'
 			}
@@ -45,6 +49,36 @@ function ContentApis ($q, $http, UserAuthService){
 		)
 	}
 
+	apiService.postImage = function(imageData, msg){
+
+		console.log(' api service '+imageData);
+		var payload = new FormData();
+		payload.append('message', msg);
+		payload.append('imgbase64', imageData);
+
+		return $http({
+
+			method:'POST',
+			url:apiService.apiRoot+'users/postimage',
+			data:payload,
+			doodoo:"Breaking the law",
+			transformRequest:angular.identity,
+			headers:{
+				'Content-Type':undefined
+			}
+
+		}).then({
+			function(response){
+				return response.data;
+			},
+			function(httpError){
+				throw httpError.status+':'+httpError.data;
+			}
+
+		})
+	}
+
+	
 	apiService.userAuth = function(userPass, callback){
 
 		console.log(" user pass displayname "+userPass.displayname);
@@ -131,17 +165,10 @@ function ContentApis ($q, $http, UserAuthService){
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8'
 			}
-		}).then(
-			function(response){
-				//console.log(" response data "+response.data);
+		}).then(function(response){
+				//if there is an error it will be handled by the controller
 				return response.data;
-			},
-			function (httpError) {
-				// translate the error
-				throw httpError.status + " : " +httpError.data;
-			}
-
-		)
+		})
 	};
 
 	apiService.setLocation = function(userObject){
@@ -189,12 +216,74 @@ function ContentApis ($q, $http, UserAuthService){
 
 	};
 
+	apiService.postBlob = function(blobObj){
+
+		return $http({
+			method: 'POST',
+			url: apiService.apiRoot+'content/blob',
+			transformRequest:[],
+			data:new Uint8Array(blobObj),
+			headers:{'Content-Type':undefined}
+
+
+		}).then(
+			function(response){
+				//console.log(" response data "+response.data);
+				return response.data;
+			},
+			function (httpError) {
+				// translate the error
+				throw httpError.status + " : " +httpError.data;
+			}
+
+		)
+
+
+	};
+
 	return apiService;
 }
 
+// User set and retrival 
+
+function UserApis($http, UrlRootService){
+
+	userService = {};
+	userService.userRoot = UrlRootService.getUrlRoot();
+	
+	userService.getUsers = function(queryObject){
+
+		return $http({
+			method:'GET',
+			url:userService.userRoot+'users/getchatters',
+			data:JSON.stringify(queryObject),
+			headers:{
+				'Content-Type': 'application/json; charset=utf-8'
+			}
+
+		}).then(
+			function(data){
+
+				console.log(' it worked '+data)
+			},
+			function(errmsg){
+				throw errmsg.status + " : " +errmsg.data;
+			}
+
+		)
+	}
+
+	return userService;
+
+}
+
 angular.module('kbyteApp')
-	.factory('ContentApis', ContentApis);
+	.factory('ContentApis', ContentApis)
+	.factory('UserApis', UserApis);
 
 
 module.exports = ContentApis;
+module.exports = UserApis;
+
+
 

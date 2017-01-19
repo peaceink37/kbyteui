@@ -29,7 +29,10 @@ var config = {
 
 // only need to run this when adding or subtracting bower js packages
 gulp.task('bowerjs', function(){
-	var jsFiles = ['src/js/*'];
+	// need to get the socket client early in the vendor bundle as other libraries depend on it.
+	var socketClient = './bower_components/socket.io-client/socket.io.js';
+	var uiScroll = './bower_components/angular-ui-scroll/dist/ui-scroll.js';
+	var jsFiles = [socketClient, 'src/js/*', uiScroll];
 	return gulp.src(mainBowerFiles().concat(jsFiles))
 		.pipe(filter('*.js'))
 		.pipe(concat('vendor.min.js'))

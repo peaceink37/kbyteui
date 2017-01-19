@@ -1,0 +1,5 @@
+<ul class="photofilterslist">
+    <li class="photofilterslistitem" ng-repeat=" thumbphoto in photothumbs track by $index " ng-click="setMainStill(thumbphoto)">
+        <canvas class="photofilterthumb" id="{{thumbphoto.name}}" width="60" height="48"></canvas>
+    </li>
+</ul>

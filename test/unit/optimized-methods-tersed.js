@@ -614,7 +614,209 @@ describe(' functional javascript tutes ', function(){
 
 	})
 
+	it(' performs second level sorts ', function(){
+
+
+		var sortArr = ['Grinch','add','Ask','gripe','grovel','attack','football-face'];
+
+		var weSorted = sortArr.sort(function(a,b){
+
+			
+			console.log(" a and b "+a+"  "+b);
+			var aCompare = a.charAt(0).toLowerCase();
+			var bCompare = b.charAt(0).toLowerCase();
+			if( aCompare > bCompare){
+				console.log(" true for first char comparison "+aCompare+"   "+bCompare);
+				//var aaCompare = a.charAt(1).toLowerCase();
+				//var bbCompare = b.charAt(1).toLowerCase(); 
+				//if(aaCompare > bbCompare){
+				//	console.log(" true for second char comparison "+a.charAt(1)+"   "+b.charAt(1)); 
+					return 1;
+				//} else {
+				//	return 0;	
+				//}
+				
+			} else if (a.charAt(0) == b.charAt(0)){
+				return 0;	
+			} else {
+				return -1;
+			}
+		})
+
+		console.log(" we sorted "+weSorted); 
+
+		var revString = "reversebitch";
+
+		function reverseIt(s){
+
+			var rs = [];
+			
+			for(var i = s.length -1; i >= 0; i-- ){
+
+				rs.push(s.charAt(i));
+
+			}
+
+			var revStr = rs.join("");
+			return revStr;
+		}
+
+		var reversedString = reverseIt(revString);
+
+		console.log(" reversed string "+reversedString);
+
+	})
+
 });
+
+describe(' example of closures ', function(){
+
+
+	it(' shows how local variables are held ', function(){
+
+
+		function countToSomething(num){
+
+
+			var n = num || 44;
+			console.log('  called !! '+n);
+			return function uptick(){
+
+				console.log('  this is n '+n);
+				n++;
+				if (n > 50){
+					n = 7;
+				}
+				return n;
+				
+			}
+		
+		}
+
+		var doodoo = countToSomething();
+		var doodoo2 = countToSomething(66);
+
+		for(var i=0; i<10; i++){
+			doodoo();
+			doodoo2();	
+		}
+
+		console.log(' val of doo doo '+doodoo());
+		console.log(' val of doo doo again '+doodoo());
+
+		function daDarth(){
+
+			var storeVal = null;
+		
+			return darthObj = {
+				
+				setVal:function(val){
+					storeVal = val;
+				},
+				getVal:function(){
+					return storeVal;
+				}	
+			}
+		
+		}
+
+		var stoopid = daDarth();
+			stoopid.setVal(22);
+		var stoopid2 = daDarth();
+			stoopid2.setVal(26);
+
+			console.log(stoopid.getVal(),"   ",stoopid2.getVal(),"  ",stoopid.storeVal);
+
+
+		
+				
+		
+	})
+
+})
+
+describe(' more about closures, array like objects, and food', function(){
+
+
+	it(' using array value that came in as array like', function(){
+
+		function deezHomies(){
+			
+			var argArr = Array.prototype.slice.call(arguments);
+
+			for(zoop in arguments){
+				console.log(' zoop arguments  '+arguments[zoop]);
+			}
+
+			return function(arg){
+				console.log(' return function called '+arg);
+				return argArr[1] + arg;
+			}
+		}
+
+		function dosHomies(){
+
+			var nippy = 'hopper', myargs = Array.prototype.slice.call(arguments);
+
+			return function(one, two){
+
+				var daVal = myargs.filter(function(val){
+
+					if(val.indexOf('dr.') != -1){
+						return val;
+					}
+
+				})
+
+				return {
+
+					getGrinch:function(){
+						return daVal;
+					},
+					setGrinch:function(sval){
+						daVal = sval;
+
+					}
+
+				}
+				//return one+nippy+' that right '+two+'  '+daVal;
+			}
+		}
+
+		// tripping will hold the values of deezhomies
+		var tripping = deezHomies(6,32,2);
+		var gonzo = tripping(15);
+
+		var semi = dosHomies('fool','dr.lovestone');
+		var grogshop = semi('papa','funky');
+		grogshop.setGrinch('mean one');
+		var newboo = grogshop.getGrinch();
+		console.log('   gonzo return  ',gonzo,'   semi  ',semi,'  grogshop ',grogshop+'  new boo '+newboo);
+
+
+	})
+
+
+})
+
+describe(' arrow functions with array manipulation ',()=>{
+
+	var tooty = {'player1':'tommy','player2':'lonny','player3':'freddy'};
+
+	it(' uses an arrow function and a map ',()=>{;
+
+		var players = [1,2,3];
+
+		var playerInfo = players.map((value)=>{
+
+			var newObj = {};
+				newObj['player'+value] = tooty['player'+value];
+				return newObj;
+		})
+
+		console.log('  arrow function map '+playerInfo);
+	})
+})
 
 
 

@@ -4,15 +4,16 @@
  * 2016 pokingBears.com
  */
 
+/* @ngInject */
 function scatterChart(d3Service){
 	
-
 	function draw(svg, width, height, data){
 
-		svg.attr('width', width)
+		svg
+			.attr('width', width)
 			.attr('height', height);
 
-		var margin = 40;
+		var margin = 30;
 
 		// Define x-scale
 		var xScale = d3Service.time.scale()
@@ -22,13 +23,13 @@ function scatterChart(d3Service){
 		// Define x-axis
 		var xAxis = d3Service.svg.axis()
 			.scale(xScale)
-			.orient('top')
+			.orient('bottom')
 			.tickFormat(d3Service.time.format('%H:%I'));
 
 		// Define y-scale
 		var yScale = d3Service.time.scale()
 			.domain([0, d3Service.max(data, function(d) { return d.y; })])
-			.range([margin, height-margin]);
+			.range([height-margin, margin]);
 
 		// Define y-axis
 		var yAxis = d3Service.svg.axis()
@@ -38,7 +39,7 @@ function scatterChart(d3Service){
 
 		// Draw x-axis
 		svg.select('.x-axis')
-			.attr("transform", "translate(0, " + margin + ")")
+			.attr("transform", "translate(0, " + (height-margin) + ")")
 			.call(xAxis);
 
 		// Draw y-axis
@@ -46,9 +47,21 @@ function scatterChart(d3Service){
 			.attr("transform", "translate(" + margin + ")")
 			.call(yAxis);
 
-		function key(d,i){
-			return d.x + '#' + d.y;
-		}
+		// Draw the x-grid
+      	svg.select('.x-grid')
+        	.attr("transform", "translate(0, " + margin + ")")
+        	.call(xAxis
+            .tickSize(height - 2*margin, 0, 0)
+            .tickFormat("")
+        );
+      
+      	// Draw the y-grid
+      	svg.select('.y-grid')
+        	.attr("transform", "translate(" + margin + ")")
+        	.call(yAxis
+            .tickSize(-width + 2*margin, 0, 0)
+            .tickFormat("")
+        );
 
 		// Add new the data points
 		svg.select('.data')
@@ -60,9 +73,14 @@ function scatterChart(d3Service){
 		// Updated all data points
 		svg.select('.data')
 			.selectAll('circle').data(data)
-			.attr('r', 2.5)
+			.attr('r', 6.5)
 			.attr('cx', function(d) { return xScale(d.x); })
 			.attr('cy', function(d) { return yScale(d.y); });
+
+		svg.select('.data')
+			.selectAll('circle').data(data)
+			.exit()
+			.remove();
 
 		var line = d3Service.svg.line()
 			.x(function(d) { return xScale(d.x); })
@@ -79,36 +97,38 @@ function scatterChart(d3Service){
 			.y1(function(d) { return yScale(d.y); })
 			.interpolate('cardinal');
 
-		svg.select('.data-visual')
+		svg.select('.data-area')
 			.datum(data)
 			.attr('d', area);
 	}
 
+	function compileChart(element, attrs, transclude){
 
-	return {
+		console.log(' compile called '+element);
 
-		restrict:"E",
-		scope:{
-			data:'='
-		},
-		compile: function(element, attrs, transclude){
+		var svg = d3.select(element[0]).append('svg');
 
-			var svg = d3Service.select(element[0]).append('svg');
+        /* Create container */
+        var axis_container = svg.append('g').attr('class', 'axis');
+        var data_container = svg.append('g').attr('class', 'data');
 
-			svg.append('g').attr('class', 'data');
-			svg.append('g').attr('class', 'x-axis axis');
-			svg.append('g').attr('class', 'y-axis axis');
-
-			svg.append('path').attr('class', 'data-line');
-			svg.append('path').attr('class', 'data-area');
+        axis_container.append('g').attr('class', 'x-grid grid');
+        axis_container.append('g').attr('class', 'y-grid grid');
+        
+        axis_container.append('g').attr('class', 'x-axis axis');
+        axis_container.append('g').attr('class', 'y-axis axis');
+        
+        data_container.append('path').attr('class', 'data-line');
+        data_container.append('path').attr('class', 'data-area');
 
 			// Define the dimensions for the chart
-			var width = 600
-			var height = 300;
+			var width = 3200
+			var height = 600;
 
-			// return the link function
-			return function(scope, element, attrs, $ctrl){
-				console.log(' scope '+scope);
+			// linking function
+			return function(scope, element, attrs){
+
+				console.log(' scope in scatter chart'+scope);
 				scope.$watch('data',function(newVal, oldVal, scope){
 
 					if(typeof scope.data === 'undefined'){
@@ -117,9 +137,17 @@ function scatterChart(d3Service){
 
 					draw(svg, width, height, scope.data);
 				}, true)
+			};
 
-			}
-		}
+	}
+
+
+	return {
+		restrict:"E",
+		scope:{
+			data:'='
+		},
+		compile: compileChart
 	};
 
 }

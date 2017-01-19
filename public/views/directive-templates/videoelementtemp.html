@@ -1,0 +1,16 @@
+<div>
+    <div class="ng-class:['video-container', {'video-on':videoc.videoSession.inSession, 'video-off':!videoc.videoSession.inSession}]">
+        <p>What is session state? '{{videoc.videoSession.inSession}}'<span ng-bind='videoc.videoSession.inSession'></p>
+        <video id='video-chat' ng-show='videoc.videoSession.inSession'>                                           
+        </video>
+        <div class='filter-collection'>
+            <photo-filter-thumbs></photo-filter-thumbs>
+        </div>
+        <div id='image-still-collection'>
+            <canvas-image width='485' height='368' id='video-still'></canvas-image>
+        </div>
+        <canvas-button id='socket-video-btn' type='videoplay' active='inactive' ng-click='videoc.videoSessionToggle()'></canvas-button>
+        <canvas-button id='capture-image' type='captureimage' active='inactive' ng-click='videoc.captureVideoStill()'></canvas-button>
+        <canvas-button id='post-image' type='postimage' active='inactive' ng-click='videoc.postImage()'></canvas-button>
+    </div>
+</div>

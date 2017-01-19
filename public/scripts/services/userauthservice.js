@@ -4,7 +4,7 @@
  * 2016 pokingBears.com
  */
 
-function UserAuthService($window){
+function UserAuthService($window, EventFactory){
 
 	userAuth = {};
 	userAuth.token = 'token';
@@ -21,8 +21,9 @@ function UserAuthService($window){
 
 	userAuth.setAuthObject = function(authObj) {
 		var authString = JSON.stringify(authObj);
-		console.log(' auth string '+authObject+'    '+typeof authObject)
+		console.log(' auth string '+authString+'    '+typeof authString);
 		$window.localStorage.setItem('uautho', authString);
+		EventFactory.emit('userupdated',authString);
 	};
 
 	userAuth.getAuthObject = function(){

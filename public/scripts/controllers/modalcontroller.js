@@ -1,10 +1,10 @@
 /**
  * Created by kellysmith on 3/26/16.
  *
- * 2014 pokingBears.com
+ * 2016 pokingBears.com
  */
 
-function ModalController($scope, $modal, $timeout, EventFactory, ContentApis, ModalScopeService) {
+function ModalController($scope, $uibModal, $timeout, EventFactory, ContentApis, ModalScopeService) {
 
 	var userPassService = ContentApis;
     var _this = this;
@@ -18,7 +18,7 @@ function ModalController($scope, $modal, $timeout, EventFactory, ContentApis, Mo
 
 		console.log(" raise modal function called ");
 
-		var modalInstance = $modal.open({
+		var modalInstance = $uibModal.open({
 				templateUrl: 'views/modal_useraccount.html',
 				scope:$scope,
 				keyboard: true,
